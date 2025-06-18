@@ -149,6 +149,7 @@ export default {
         const isOpen = ref(false);
         const isReallyFocused = ref(false);
         const isSearchBarFocused = ref(false);
+        const isMouseDownOnOption = ref(false);
         const rawData = computed(() => props.content.choices || []);
 
         const isFocused = computed(() => {
@@ -370,6 +371,7 @@ export default {
             updateSearch,
         });
 
+
         function openDropdown() {
             if (isDisabled.value || isReadonly.value) return;
             const triggerElementBounding = triggerElement.value.getBoundingClientRect();
@@ -424,7 +426,10 @@ export default {
         }
 
         function handleBlur() {
-            isReallyFocused.value = false;
+            // Don't blur if we're clicking on an option
+            if (!isMouseDownOnOption.value) {
+                isReallyFocused.value = false;
+            }
         }
 
         function focusInput() {
@@ -786,6 +791,7 @@ export default {
         provide('_wwSelect:registerTriggerLocalContext', registerTriggerLocalContext);
         provide('_wwSelect:dropdownMethods', { closeDropdown });
         provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch, isSearchBarFocused });
+        provide('_wwSelect:isMouseDownOnOption', isMouseDownOnOption);
         provide('_wwSelect:localContext', currentLocalContext);
 
         const markdown = `### Select local informations
@@ -994,11 +1000,5 @@ export default {
     position: absolute;
     right: 0;
     width: 100%;
-}
-</style>
-
-<style lang="scss">
-.ww-element:focus-visible {
-    outline: none;
 }
 </style>
