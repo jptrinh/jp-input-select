@@ -11,6 +11,8 @@
             ref="triggerElement"
             @click="toggleDropdown"
             @keydown="handleKeydown"
+            @focus="handleFocus"
+            @blur="handleBlur"
             role="combobox"
             :aria-haspopup="selectType === 'single' ? 'listbox' : 'true'"
             :aria-expanded="isOpen"
@@ -89,7 +91,7 @@ export default {
         /* wwEditor:end */
         wwElementState: { type: Object, required: true },
     },
-    emits: ['trigger-event', 'update:content', 'update:sidepanel-content'],
+    emits: ['trigger-event', 'update:content', 'update:sidepanel-content', 'add-state', 'remove-state'],
     setup(props, { emit }) {
         /* wwEditor:start */
         useEditorHint();
@@ -145,7 +147,28 @@ export default {
         const optionsMap = ref(new Map());
         const options = computed(() => Array.from(optionsMap.value.values()));
         const isOpen = ref(false);
+        const isReallyFocused = ref(false);
+        const isSearchBarFocused = ref(false);
+        const isMouseDownOnOption = ref(false);
         const rawData = computed(() => props.content.choices || []);
+
+        const isFocused = computed(() => {
+            /* wwEditor:start */
+            if (props.wwEditorState?.isSelected) {
+                return props.wwElementState.states.includes('focus');
+            }
+            /* wwEditor:end */
+            return isReallyFocused.value;
+        });
+
+        const isAnySelectElementFocused = computed(() => {
+            /* wwEditor:start */
+            if (props.wwEditorState?.isSelected) {
+                return props.wwElementState.states.includes('focus');
+            }
+            /* wwEditor:end */
+            return isReallyFocused.value || isSearchBarFocused.value;
+        });
         const isDisabled = computed(() => props.content.disabled || false);
         const isReadonly = computed(() => props.content.readonly || false);
         const canUnselect = computed(() => props.content.unselectOnClick || false);
@@ -386,6 +409,7 @@ export default {
             updateSearch,
         });
 
+
         function openDropdown() {
             if (isDisabled.value || isReadonly.value) return;
             const triggerElementBounding = triggerElement.value.getBoundingClientRect();
@@ -431,6 +455,24 @@ export default {
                 Date.now() > lastTriggeredComponentAction.value + 400
             ) {
                 closeDropdown();
+            }
+        }
+
+        function handleFocus() {
+            if (isDisabled.value || isReadonly.value) return;
+            isReallyFocused.value = true;
+        }
+
+        function handleBlur() {
+            // Don't blur if we're clicking on an option
+            if (!isMouseDownOnOption.value) {
+                isReallyFocused.value = false;
+            }
+        }
+
+        function focusInput() {
+            if (triggerElement.value && !isDisabled.value && !isReadonly.value) {
+                triggerElement.value.focus();
             }
         }
 
@@ -654,6 +696,22 @@ export default {
             updateHasSearch(showSearch);
         });
 
+        watch(isReallyFocused, (isFocused, wasFocused) => {
+            if (isFocused && !wasFocused) {
+                emit('trigger-event', { name: 'focus', event: null });
+            } else if (!isFocused && wasFocused) {
+                emit('trigger-event', { name: 'blur', event: null });
+            }
+        });
+
+        watch(isAnySelectElementFocused, (value) => {
+            if (value) {
+                emit('add-state', 'focus');
+            } else {
+                emit('remove-state', 'focus');
+            }
+        }, { immediate: true });
+
         watch(isOpen, () => {
             nextTick(syncFloating);
             handleInitialFocus();
@@ -804,7 +862,8 @@ export default {
         provide('_wwSelect:registerOptionProperties', registerOptionProperties);
         provide('_wwSelect:registerTriggerLocalContext', registerTriggerLocalContext);
         provide('_wwSelect:dropdownMethods', { closeDropdown });
-        provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch });
+        provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch, isSearchBarFocused });
+        provide('_wwSelect:isMouseDownOnOption', isMouseDownOnOption);
         provide('_wwSelect:localContext', currentLocalContext);
 
         const markdown = `### Select local informations
@@ -875,6 +934,10 @@ export default {
             isEditing,
             forceOpenInEditor,
             isOpen,
+            isReallyFocused,
+            isSearchBarFocused,
+            isFocused,
+            isAnySelectElementFocused,
             triggerElement,
             dropdownElement,
             floatingStyles,
@@ -884,6 +947,9 @@ export default {
             isDisabled,
             selectType,
             handleKeydown,
+            handleFocus,
+            handleBlur,
+            focusInput,
             toggleDropdown,
             resizeObserver,
             options,
@@ -937,6 +1003,10 @@ export default {
             this.resetLastTriggerComponentAction();
             this.resetSearch();
         },
+        actionFocusInput() {
+            this.resetLastTriggerComponentAction();
+            this.focusInput();
+        },
     },
 };
 </script>
@@ -946,6 +1016,11 @@ export default {
 
 .ww-select {
     position: relative;
+    outline: none;
+}
+
+.ww-select:focus-visible {
+    outline: none;
 }
 
 .ww-select-z-index {
@@ -954,6 +1029,11 @@ export default {
 
 .ww-select__trigger {
     width: 100%;
+    outline: none;
+}
+
+.ww-select__trigger:focus-visible {
+    outline: none;
 }
 
 .ww-select__dropdown__wrapper {

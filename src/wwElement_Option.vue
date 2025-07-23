@@ -4,6 +4,9 @@
         :style="optionStyles"
         ref="optionRef"
         @click="handleClick"
+        @mousedown="handleMouseDown"
+        @mouseup="handleMouseUp"
+        @mouseleave="handleMouseLeave"
         @keydown="handleKeyDown"
         role="option"
         :id="optionId"
@@ -16,7 +19,7 @@
 </template>
 
 <script>
-import { ref, unref, toValue, inject, computed, watch, onBeforeUnmount, watchEffect } from 'vue';
+import { ref, unref, toValue, inject, computed, watch, onBeforeUnmount, watchEffect, nextTick } from 'vue';
 import useAccessibility from './useAccessibility_Option';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
@@ -65,6 +68,7 @@ export default {
         const removeSpecificValue = inject('_wwSelect:removeSpecificValue', () => {});
         const focusSelectElement = inject('_wwSelect:focusSelectElement', () => {});
         const activeDescendant = inject('_wwSelect:activeDescendant', ref(null));
+        const isMouseDownOnOption = inject('_wwSelect:isMouseDownOnOption', ref(false));
 
         const mappingLabel = inject('_wwSelect:mappingLabel', ref(null));
         const mappingValue = inject('_wwSelect:mappingValue', ref(null));
@@ -196,6 +200,23 @@ export default {
             }
         };
 
+        const handleMouseDown = (event) => {
+            // Track mousedown to prevent blur on the select element
+            isMouseDownOnOption.value = true;
+        };
+
+        const handleMouseUp = () => {
+            // Reset the flag after mouseup
+            nextTick(() => {
+                isMouseDownOnOption.value = false;
+            });
+        };
+
+        const handleMouseLeave = () => {
+            // Also reset if mouse leaves the option while pressed
+            isMouseDownOnOption.value = false;
+        };
+
         // Maybe => move this to the select component (selectType too + new isSelected function in the select)
         const unselect = () => {
             if (canInteract.value) {
@@ -273,6 +294,9 @@ export default {
             optionRef,
             optionId,
             handleClick,
+            handleMouseDown,
+            handleMouseUp,
+            handleMouseLeave,
             handleKeyDown,
             isFocused,
             activeDescendant,
