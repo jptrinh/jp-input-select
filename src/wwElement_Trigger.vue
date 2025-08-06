@@ -116,6 +116,7 @@ export default {
                 'align-items': 'center',
                 'justify-content': 'center',
                 'pointer-events': 'none',
+                'margin-left': '6px',
             };
         });
 
