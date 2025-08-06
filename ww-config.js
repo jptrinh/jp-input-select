@@ -146,6 +146,8 @@ export default {
             'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
+            'selectedPrefix',
+            'selectedPrefixColor',
             'allowScrollingWhenOpen',
             [
                 'triggerTitle',
@@ -182,8 +184,17 @@ export default {
     },
     states: ['focus', 'readonly'],
     triggerEvents: [
-        { name: 'change', label: { en: 'On change' }, event: { value: '' }, default: true },
-        { name: 'initValueChange', label: { en: 'On init value change' }, event: { value: '' } },
+        {
+            name: 'change',
+            label: { en: 'On change' },
+            event: { value: '' },
+            default: true,
+        },
+        {
+            name: 'initValueChange',
+            label: { en: 'On init value change' },
+            event: { value: '' },
+        },
         { name: 'focus', label: { en: 'On focus' }, event: { value: '' } },
         { name: 'blur', label: { en: 'On blur' }, event: { value: '' } },
     ],
@@ -815,8 +826,7 @@ export default {
             bindable: true,
             responsive: true,
             propertyHelp: {
-                tooltip:
-                    'This should be disabled in some edge cases like in popups, datagrid, etc.',
+                tooltip: 'This should be disabled in some edge cases like in popups, datagrid, etc.',
             },
             bindingValidation: {
                 type: 'boolean',
@@ -992,8 +1002,8 @@ export default {
         },
 
         /* ------------------------------------
-            SELECTED STYLES
-        ------------------------------------- */
+                SELECTED STYLES
+            ------------------------------------- */
         selectedTitle: {
             type: 'Title',
             label: { en: 'Selected' },
@@ -1086,8 +1096,8 @@ export default {
         },
 
         /* ------------------------------------
-            PLACEHOLDER STYLES
-        ------------------------------------- */
+                PLACEHOLDER STYLES
+            ------------------------------------- */
         placeholderTitle: {
             type: 'Title',
             label: { en: 'Placeholder' },
@@ -1175,8 +1185,8 @@ export default {
         },
 
         /* ------------------------------------
-            CHIP STYLES
-        ------------------------------------- */
+                CHIP STYLES
+            ------------------------------------- */
         chipStylesTitle: {
             type: 'Title',
             label: {
@@ -1444,8 +1454,8 @@ export default {
         },
 
         /* ------------------------------------
-            TRIGGER STYLES
-        ------------------------------------- */
+                TRIGGER STYLES
+            ------------------------------------- */
         triggerStylesTitle: {
             type: 'Title',
             label: {
@@ -1673,6 +1683,38 @@ export default {
             bindable: true,
             responsive: true,
         },
+        selectedPrefix: {
+            label: { en: 'Prefix' },
+            type: 'Text',
+            defaultValue: '',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            section: 'settings', // Add this line
+            hidden: content => content.selectType !== 'single',
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'Text to display before the selected value (e.g., "Selected", "Chosen", etc.)',
+            },
+            /* wwEditor:end */
+        },
+        selectedPrefixColor: {
+            label: { en: 'Prefix color' },
+            type: 'Color',
+            defaultValue: '#666',
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            section: 'settings', // Add this line
+            hidden: content => content.selectType !== 'single',
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'Color for the prefix text',
+            },
+            /* wwEditor:end */
+        },
         triggerIconSize: {
             type: 'Length',
             label: {
@@ -1697,8 +1739,8 @@ export default {
         },
 
         /* ------------------------------------
-            DROPDOWN STYLES
-        ------------------------------------- */
+                DROPDOWN STYLES
+            ------------------------------------- */
         dropdownStylesTitle: {
             type: 'Title',
             label: {
@@ -1885,8 +1927,8 @@ export default {
         },
 
         /* ------------------------------------
-            OPTION STYLES
-        ------------------------------------- */
+                OPTION STYLES
+            ------------------------------------- */
         optionStylesTitle: {
             type: 'Title',
             label: {
@@ -2149,8 +2191,8 @@ export default {
         },
 
         /* ------------------------------------
-            EMPTY STYLES
-        ------------------------------------- */
+                EMPTY STYLES
+            ------------------------------------- */
         emptyStateStylesTitle: {
             type: 'Title',
             label: {
@@ -2251,8 +2293,8 @@ export default {
         },
 
         /* ------------------------------------
-            SEARCH STYLES
-        ------------------------------------- */
+                SEARCH STYLES
+            ------------------------------------- */
         searchStylesTitle: {
             type: 'Title',
             label: {

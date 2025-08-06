@@ -2,20 +2,18 @@
     <div class="ww-input-select__trigger">
         <!-- SINGLE SELECT -->
         <div v-if="isSingleSelect" :style="triggerStyle">
-            <span v-if="isOptionSelected" :style="selectedValueStyle">{{ selectedLabel }}</span>
+            <div v-if="isOptionSelected" class="selected-value-container">
+                <span v-if="prefixText" :style="prefixStyle">{{ prefixText }}: </span>
+                <span :style="selectedValueStyle">{{ selectedLabel }}</span>
+            </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
             <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
         </div>
         <!-- MULTI SELECT -->
         <div v-else :style="triggerStyle">
             <div v-if="isOptionSelected" class="ww-input-select__chip_container">
-                <div
-                    class="ww-input-select__chip"
-                    v-for="option in localContext?.data?.select?.active?.details"
-                    :key="option.value"
-                    @click="e => handleChipClick(e, option.value)"
-                    :style="chipStyle"
-                >
+                <div class="ww-input-select__chip" v-for="option in localContext?.data?.select?.active?.details"
+                    :key="option.value" @click="e => handleChipClick(e, option.value)" :style="chipStyle">
                     <span>{{ option.label }}</span>
                     <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
                 </div>
@@ -57,6 +55,12 @@ export default {
         const selectedLabel = computed(() => {
             return localContext.value?.data?.select?.active?.details?.label;
         });
+
+        // Add computed property for the prefix text
+        const prefixText = computed(() => {
+            return props.content.selectedPrefix?.trim() || '';
+        });
+
         const isOptionSelected = computed(
             () =>
                 !!localContext.value?.data?.select?.active?.details?.label ||
@@ -76,14 +80,14 @@ export default {
         const triggerStyle = computed(() => {
             const borderCss = !props.content.triggerBorder
                 ? {
-                      border: props.content.triggerBorderAll,
-                  }
+                    border: props.content.triggerBorderAll,
+                }
                 : {
-                      'border-top': props.content.triggerBorderTop,
-                      'border-right': props.content.triggerBorderRight,
-                      'border-bottom': props.content.triggerBorderBottom,
-                      'border-left': props.content.triggerBorderLeft,
-                  };
+                    'border-top': props.content.triggerBorderTop,
+                    'border-right': props.content.triggerBorderRight,
+                    'border-bottom': props.content.triggerBorderBottom,
+                    'border-left': props.content.triggerBorderLeft,
+                };
 
             return {
                 padding: props.content.triggerPadding,
@@ -122,7 +126,17 @@ export default {
                 color: props.content.selectedFontColor,
                 'font-weight': props.content.selectedFontWeight,
                 'text-align': props.content.selectedTextAlign,
-                width: '100%',
+            };
+        });
+
+        // Add computed property for prefix styling
+        const prefixStyle = computed(() => {
+            return {
+                'font-size': props.content.selectedFontSize, // Same size as selected text
+                'font-family': props.content.selectedFontFamily,
+                color: props.content.selectedPrefixColor || '#666',
+                'font-weight': props.content.selectedFontWeight,
+                'margin-right': '3px',
             };
         });
 
@@ -140,14 +154,14 @@ export default {
         const chipStyle = computed(() => {
             const borderCss = !props.content.chipBorder
                 ? {
-                      border: props.content.chipBorderAll,
-                  }
+                    border: props.content.chipBorderAll,
+                }
                 : {
-                      'border-top': props.content.chipBorderTop,
-                      'border-right': props.content.chipBorderRight,
-                      'border-bottom': props.content.chipBorderBottom,
-                      'border-left': props.content.chipBorderLeft,
-                  };
+                    'border-top': props.content.chipBorderTop,
+                    'border-right': props.content.chipBorderRight,
+                    'border-bottom': props.content.chipBorderBottom,
+                    'border-left': props.content.chipBorderLeft,
+                };
 
             return {
                 'font-size': props.content.chipFontSize,
@@ -211,11 +225,13 @@ export default {
             isSingleSelect,
             data,
             selectedLabel,
+            prefixText,
             isOptionSelected,
             localContext,
             triggerStyle,
             triggerIconStyle,
             selectedValueStyle,
+            prefixStyle,
             placeholderStyle,
             chipIcon,
             chipStyle,
@@ -235,6 +251,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    .selected-value-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
 
     .ww-input-select__chip_container {
         display: flex;
