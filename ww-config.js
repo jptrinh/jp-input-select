@@ -1,10 +1,8 @@
-const virtualScrollHelp =
-    'Virtual scrolling optimizes performance by only rendering visible options and a small buffer around them. When enabled, this feature can significantly improve loading and scrolling performance for large lists.</br></br>Important notes:</br>- The layout will be forced to a vertical list format</br>- Option items must be positioned at the root level of the Options List';
-
 const bufferHelp =
-    'The buffer is the amount of pixel to add to edges of the scrolling visible area to start rendering items further away.';
+    'The buffer is the amount of pixels to add to edges of the scrolling visible area to start rendering items further away. Virtual scrolling is always enabled and optimizes performance by only rendering visible options.';
 
-const minItemSizeHelp = 'The minimum height of an item in the virtual scroll.';
+const minItemSizeHelp =
+    'The minimum height of an item in pixels. Used by the dynamic scroller to estimate sizes before items are rendered.';
 
 const heavyModeHelp =
     'Heavy mode uses RecycleScroller for better performance with large lists (1000+ items). When enabled, you must specify the exact item size. When disabled, DynamicScroller is used which automatically detects item sizes but may be slower with very large lists.';
@@ -868,24 +866,6 @@ export default {
                 en: 'Options',
             },
             editorOnly: true,
-        },
-        virtualScroll: {
-            label: { en: 'Virtual scroll' },
-            type: 'OnOff',
-            defaultValue: true,
-            states: true,
-            bindable: true,
-            responsive: true,
-            section: 'settings',
-            /* wwEditor:start */
-            bindingValidation: {
-                validations: [{ type: 'boolean' }],
-                tooltip: virtualScrollHelp,
-            },
-            propertyHelp: {
-                tooltip: virtualScrollHelp,
-            },
-            /* wwEditor:end */
         },
         virtualScrollBuffer: {
             label: { en: 'Buffer' },

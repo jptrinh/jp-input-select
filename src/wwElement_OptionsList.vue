@@ -99,12 +99,10 @@ export default {
         const searchState = inject('_wwSelect:searchState', ref(null));
         const { updateSearch } = inject('_wwSelect:useSearch', {});
         const registerOptionProperties = inject('_wwSelect:registerOptionProperties', () => {});
-        const virtualScroll = computed(() => props.content.virtualScroll ?? true);
-        const virtualScrollSizeDependencies = computed(() => props.content.virtualScrollSizeDependencies);
-        const virtualScrollMinItemSize = computed(() => props.content.virtualScrollMinItemSize || 40);
-        const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer || 400);
-        const heavyMode = computed(() => props.content.heavyMode || false);
-        const itemSize = computed(() => props.content.itemSize || 40);
+        const virtualScrollMinItemSize = computed(() => props.content.virtualScrollMinItemSize);
+        const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer);
+        const heavyMode = computed(() => props.content.heavyMode);
+        const itemSize = computed(() => props.content.itemSize);
 
         const emptyStateText = computed(() => wwLib.wwLang.getText(props.content.emptyStateText));
 
@@ -220,8 +218,6 @@ export default {
         return {
             emptyStateText,
             filteredOptions,
-            virtualScroll,
-            virtualScrollSizeDependencies,
             virtualScrollMinItemSize,
             virtualScrollBuffer,
             heavyMode,
