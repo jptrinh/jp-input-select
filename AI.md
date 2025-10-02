@@ -13,7 +13,9 @@ A customizable select element that supports single and multiple selection with a
 
 -   Supports both single and multiple selection modes
 -   Customizable search functionality with configurable search fields
--   Virtual scrolling for handling large datasets (1000+ options) with optimized performance
+-   Virtual scrolling for handling large datasets with two performance modes:
+    -   Normal mode: DynamicScroller with automatic item size detection (easier to use)
+    -   Heavy mode: RecycleScroller with fixed item sizes for optimal performance with 1000+ items
 -   Extensive styling options for all components (trigger, dropdown, options, chips)
 -   Multi-language support
 -   Custom validation support
@@ -47,9 +49,10 @@ A customizable select element that supports single and multiple selection with a
 -   autoFocus: boolean - Whether to focus search input on open. Default: true
 -   showEmptyStateInEditor: boolean - Display the empty state message in the editor when no options are available. Default: false (editor only)
 -   allowScrollingWhenOpen: boolean - Allow scrolling when dropdown is open. Default: false
--   virtualScroll: boolean - Enable virtual scrolling for optimal performance with large datasets (1000+ options). Only renders visible items plus a buffer. Default: true
--   virtualScrollBuffer: number - Buffer size in pixels for virtual scroll. Lower values improve performance but may show blank spaces while scrolling. Default: 200
--   virtualScrollMinItemSize: number - Minimum item height in pixels for virtual scroll. Should match your option height. Default: 40
+-   virtualScrollBuffer: number - Buffer size (in pixels) for virtual scroll. This extends the viewport to render items outside the visible area. Default: 600
+-   virtualScrollMinItemSize: number - Minimum item height (in pixels) for dynamic size detection. Only used when heavyMode is false. Default: 40
+-   heavyMode: boolean - Enable heavy mode for better performance with very large lists (1000+ items). When enabled, uses RecycleScroller with fixed item sizes. When disabled, uses DynamicScroller with automatic size detection. Default: false
+-   itemSize: number - Exact height (in pixels) of each option item. Required when heavyMode is true. All items must have the same height in heavy mode. Default: 40
 -   placeholder: string|object - Placeholder text. Default: { en: 'Select a value' }
 -   emptyStateText: string|object - Text to display when search returns no results. Default: { en: 'No results found' }
 -   searchPlaceholder: string|object - Placeholder text for search input. Default: { en: 'Search' }
@@ -222,11 +225,4 @@ If user asks for multi lang support, you can use globalContext page lang and set
 **CRITICAL** : You have to perfectly style this select according to the page.
 **CRITICAL** : For multiselect, "triggerHeight" should be "unset" to let the component calculate it with the number of chips.
 
-**Performance Optimization for Large Datasets (1000+ options):**
-
--   Virtual scrolling is enabled by default and automatically handles large lists
--   Only visible items (+ buffer) are rendered in the DOM, providing optimal performance
--   For datasets with 1000+ items, always keep virtualScroll enabled (default: true)
--   Adjust virtualScrollBuffer if you experience blank spaces during fast scrolling (decrease for better performance, increase for smoother scrolling)
--   Set virtualScrollMinItemSize to match your actual option height for accurate scrollbar positioning
--   The search functionality uses memoization to avoid re-filtering on every render
+**Performance optimization** : Use heavy mode when dealing with 1000+ options for optimal performance. When heavy mode is enabled, you must specify the exact itemSize (height of each option in pixels) and ensure all options have the same height. For lists with dynamic heights or fewer items, keep heavy mode disabled to use automatic size detection.

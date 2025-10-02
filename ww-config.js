@@ -6,6 +6,12 @@ const bufferHelp =
 
 const minItemSizeHelp = 'The minimum height of an item in the virtual scroll.';
 
+const heavyModeHelp =
+    'Heavy mode uses RecycleScroller for better performance with large lists (1000+ items). When enabled, you must specify the exact item size. When disabled, DynamicScroller is used which automatically detects item sizes but may be slower with very large lists.';
+
+const itemSizeHelp =
+    'The exact height (in pixels) of each option item. All items must have the same height when using heavy mode.';
+
 export default {
     editor: {
         label: 'Select',
@@ -179,6 +185,8 @@ export default {
                 'virtualScroll',
                 'virtualScrollBuffer',
                 'virtualScrollMinItemSize',
+                'heavyMode',
+                'itemSize',
             ],
             ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
             'formInfobox',
@@ -915,7 +923,44 @@ export default {
                 tooltip: minItemSizeHelp,
             },
             /* wwEditor:end */
-            hidden: content => !content.virtualScroll,
+            hidden: content => content.heavyMode,
+        },
+        heavyMode: {
+            label: { en: 'Heavy mode' },
+            type: 'OnOff',
+            defaultValue: false,
+            states: true,
+            bindable: true,
+            responsive: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'boolean' }],
+                tooltip: heavyModeHelp,
+            },
+            propertyHelp: {
+                tooltip: heavyModeHelp,
+            },
+            /* wwEditor:end */
+        },
+        itemSize: {
+            label: { en: 'Item size' },
+            type: 'Number',
+            defaultValue: 40,
+            states: true,
+            bindable: true,
+            responsive: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'number' }],
+                tooltip: itemSizeHelp,
+            },
+            propertyHelp: {
+                tooltip: itemSizeHelp,
+            },
+            /* wwEditor:end */
+            hidden: content => !content.heavyMode,
         },
         showEmptyStateInEditor: {
             label: { en: 'Show empty state in editor' },

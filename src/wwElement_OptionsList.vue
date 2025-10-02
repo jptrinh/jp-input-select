@@ -1,11 +1,33 @@
 <template>
+    <!-- Heavy Mode: RecycleScroller for better performance with large lists -->
+    <RecycleScroller
+        v-if="heavyMode && filteredOptions.length > 0"
+        style="height: 100%"
+        :items="dynamicScrollerItems"
+        :item-size="itemSize"
+        :buffer="virtualScrollBuffer"
+        :key="'heavy-' + filteredOptions.length"
+        key-field="id"
+        page-mode
+    >
+        <template v-slot="{ item, index }">
+            <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
+                <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionSpacing } : {}">
+                    <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+                </div>
+            </wwLayoutItemContext>
+        </template>
+    </RecycleScroller>
+
+    <!-- Normal Mode: DynamicScroller with automatic size detection -->
     <DynamicScroller
-        v-if="virtualScroll && filteredOptions.length > 0"
+        v-else-if="!heavyMode && filteredOptions.length > 0"
         style="height: 100%"
         :items="dynamicScrollerItems"
         :min-item-size="virtualScrollMinItemSize"
         :buffer="virtualScrollBuffer"
-        :key="filteredOptions.length"
+        :key="'dynamic-' + filteredOptions.length"
+        page-mode
     >
         <template v-slot="{ item, index, active }">
             <DynamicScrollerItem
@@ -23,30 +45,15 @@
         </template>
     </DynamicScroller>
 
-    <div v-else-if="!virtualScroll && filteredOptions.length > 0" style="height: 100%; overflow: auto">
-        <wwLayoutItemContext
-            v-for="(item, index) in filteredOptions"
-            :key="index"
-            is-repeat
-            :index="index"
-            :data="item"
-        >
-            <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionSpacing } : {}">
-                <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
-            </div>
-        </wwLayoutItemContext>
-    </div>
-
     <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor" :style="emptyStateStyle">
         <span>{{ emptyStateText }}</span>
-        <!-- <wwElement v-bind="content.emptyStateContainer" /> -->
     </div>
 </template>
 
 <script>
 import InputSelectOption from './wwElement_Option.vue';
 import { ref, inject, computed, watch } from 'vue';
-import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller';
+import { DynamicScroller, DynamicScrollerItem, RecycleScroller } from 'vue-virtual-scroller';
 import { useMemoize } from '@vueuse/core';
 /* wwEditor:start */
 import useEditorHint from './editor/useEditorHint';
@@ -56,6 +63,7 @@ export default {
     components: {
         DynamicScroller,
         DynamicScrollerItem,
+        RecycleScroller,
         'ww-element-option': InputSelectOption,
     },
     props: {
@@ -94,7 +102,9 @@ export default {
         const virtualScroll = computed(() => props.content.virtualScroll ?? true);
         const virtualScrollSizeDependencies = computed(() => props.content.virtualScrollSizeDependencies);
         const virtualScrollMinItemSize = computed(() => props.content.virtualScrollMinItemSize || 40);
-        const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer || 200);
+        const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer || 400);
+        const heavyMode = computed(() => props.content.heavyMode || false);
+        const itemSize = computed(() => props.content.itemSize || 40);
 
         const emptyStateText = computed(() => wwLib.wwLang.getText(props.content.emptyStateText));
 
@@ -214,6 +224,8 @@ export default {
             virtualScrollSizeDependencies,
             virtualScrollMinItemSize,
             virtualScrollBuffer,
+            heavyMode,
+            itemSize,
             showEmptyStateInEditor,
             dynamicScrollerItems,
             emptyStateStyle,
