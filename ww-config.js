@@ -176,6 +176,7 @@ export default {
                 'closeOnClickOutside',
                 'manualTrigger',
                 'selectOnClick',
+                'virtualScroll',
                 'virtualScrollBuffer',
                 'virtualScrollMinItemSize',
             ],
@@ -860,29 +861,28 @@ export default {
             },
             editorOnly: true,
         },
-        // virtualScroll: {
-        //     label: { en: 'Virtual scroll' },
-        //     type: 'OnOff',
-        //     defaultValue: true,
-        //     states: true,
-        //     bindable: true,
-        //     responsive: true,
-        //     section: 'settings',
-        //     hidden: true,
-        //     /* wwEditor:start */
-        //     bindingValidation: {
-        //         validations: [{ type: 'boolean' }],
-        //         tooltip: virtualScrollHelp,
-        //     },
-        //     propertyHelp: {
-        //         tooltip: virtualScrollHelp,
-        //     },
-        //     /* wwEditor:end */
-        // },
+        virtualScroll: {
+            label: { en: 'Virtual scroll' },
+            type: 'OnOff',
+            defaultValue: true,
+            states: true,
+            bindable: true,
+            responsive: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'boolean' }],
+                tooltip: virtualScrollHelp,
+            },
+            propertyHelp: {
+                tooltip: virtualScrollHelp,
+            },
+            /* wwEditor:end */
+        },
         virtualScrollBuffer: {
             label: { en: 'Buffer' },
             type: 'Number',
-            defaultValue: 600,
+            defaultValue: 200,
             states: true,
             bindable: true,
             responsive: true,
@@ -896,7 +896,7 @@ export default {
                 tooltip: bufferHelp,
             },
             /* wwEditor:end */
-            // hidden: content => !content.virtualScroll,
+            hidden: content => !content.virtualScroll,
         },
         virtualScrollMinItemSize: {
             label: { en: 'Min item size' },
@@ -915,7 +915,7 @@ export default {
                 tooltip: minItemSizeHelp,
             },
             /* wwEditor:end */
-            // hidden: content => !content.virtualScroll,
+            hidden: content => !content.virtualScroll,
         },
         showEmptyStateInEditor: {
             label: { en: 'Show empty state in editor' },

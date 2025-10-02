@@ -1,6 +1,6 @@
 <template>
     <DynamicScroller
-        v-if="/*virtualScroll &&*/ filteredOptions.length > 0"
+        v-if="virtualScroll && filteredOptions.length > 0"
         style="height: 100%"
         :items="dynamicScrollerItems"
         :min-item-size="virtualScrollMinItemSize"
@@ -23,7 +23,7 @@
         </template>
     </DynamicScroller>
 
-    <!-- <div v-else-if="!virtualScroll && filteredOptions.length > 0" style="height: 100%;overflow: auto;">
+    <div v-else-if="!virtualScroll && filteredOptions.length > 0" style="height: 100%; overflow: auto">
         <wwLayoutItemContext
             v-for="(item, index) in filteredOptions"
             :key="index"
@@ -31,9 +31,11 @@
             :index="index"
             :data="item"
         >
-            <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+            <div :style="index != filteredOptions.length - 1 ? { paddingBottom: content.optionSpacing } : {}">
+                <ww-element-option :local-data="item" :content="content" :wwEditorState="wwEditorState" />
+            </div>
         </wwLayoutItemContext>
-    </div> -->
+    </div>
 
     <div v-show="filteredOptions.length === 0 || showEmptyStateInEditor" :style="emptyStateStyle">
         <span>{{ emptyStateText }}</span>
@@ -89,10 +91,10 @@ export default {
         const searchState = inject('_wwSelect:searchState', ref(null));
         const { updateSearch } = inject('_wwSelect:useSearch', {});
         const registerOptionProperties = inject('_wwSelect:registerOptionProperties', () => {});
-        const virtualScroll = computed(() => props.content.virtualScroll);
+        const virtualScroll = computed(() => props.content.virtualScroll ?? true);
         const virtualScrollSizeDependencies = computed(() => props.content.virtualScrollSizeDependencies);
         const virtualScrollMinItemSize = computed(() => props.content.virtualScrollMinItemSize || 40);
-        const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer || 400);
+        const virtualScrollBuffer = computed(() => props.content.virtualScrollBuffer || 200);
 
         const emptyStateText = computed(() => wwLib.wwLang.getText(props.content.emptyStateText));
 

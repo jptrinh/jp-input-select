@@ -13,7 +13,7 @@ A customizable select element that supports single and multiple selection with a
 
 -   Supports both single and multiple selection modes
 -   Customizable search functionality with configurable search fields
--   Virtual scrolling for handling large datasets
+-   Virtual scrolling for handling large datasets (1000+ options) with optimized performance
 -   Extensive styling options for all components (trigger, dropdown, options, chips)
 -   Multi-language support
 -   Custom validation support
@@ -47,8 +47,9 @@ A customizable select element that supports single and multiple selection with a
 -   autoFocus: boolean - Whether to focus search input on open. Default: true
 -   showEmptyStateInEditor: boolean - Display the empty state message in the editor when no options are available. Default: false (editor only)
 -   allowScrollingWhenOpen: boolean - Allow scrolling when dropdown is open. Default: false
--   virtualScrollBuffer: number - Buffer size for virtual scroll. Default: 600
--   virtualScrollMinItemSize: number - Minimum item size for virtual scroll. Default: 40
+-   virtualScroll: boolean - Enable virtual scrolling for optimal performance with large datasets (1000+ options). Only renders visible items plus a buffer. Default: true
+-   virtualScrollBuffer: number - Buffer size in pixels for virtual scroll. Lower values improve performance but may show blank spaces while scrolling. Default: 200
+-   virtualScrollMinItemSize: number - Minimum item height in pixels for virtual scroll. Should match your option height. Default: 40
 -   placeholder: string|object - Placeholder text. Default: { en: 'Select a value' }
 -   emptyStateText: string|object - Text to display when search returns no results. Default: { en: 'No results found' }
 -   searchPlaceholder: string|object - Placeholder text for search input. Default: { en: 'Search' }
@@ -220,3 +221,12 @@ If user asks for multi lang support, you can use globalContext page lang and set
 **CRITICAL** : labels are always text, no img, no icons, no html etc. Do never attempts to return html in mappingLabel.
 **CRITICAL** : You have to perfectly style this select according to the page.
 **CRITICAL** : For multiselect, "triggerHeight" should be "unset" to let the component calculate it with the number of chips.
+
+**Performance Optimization for Large Datasets (1000+ options):**
+
+-   Virtual scrolling is enabled by default and automatically handles large lists
+-   Only visible items (+ buffer) are rendered in the DOM, providing optimal performance
+-   For datasets with 1000+ items, always keep virtualScroll enabled (default: true)
+-   Adjust virtualScrollBuffer if you experience blank spaces during fast scrolling (decrease for better performance, increase for smoother scrolling)
+-   Set virtualScrollMinItemSize to match your actual option height for accurate scrollbar positioning
+-   The search functionality uses memoization to avoid re-filtering on every render
