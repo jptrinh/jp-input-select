@@ -196,13 +196,26 @@ export default {
         // Styles
         const syncFloating = () => {
             if (!triggerElement?.value) return;
-            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            const triggerRect = triggerElement.value.getBoundingClientRect();
+            const offsetY = parseInt(props.content.offsetY) || 0;
+            const offsetX = parseInt(props.content.offsetX) || 0;
+            const viewportHeight = wwLib.getFrontWindow()?.innerHeight || window.innerHeight;
+
+            let top = triggerRect.bottom + offsetY;
+
+            // Auto-flip: if not enough space below, place above
+            const dropdownHeight = dropdownElement.value?.getBoundingClientRect().height || 300;
+            const spaceBelow = viewportHeight - triggerRect.bottom;
+            const spaceAbove = triggerRect.top;
+
+            if (dropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
+                top = triggerRect.top - dropdownHeight - offsetY;
+            }
+
             floatingStyles.value = {
                 position: 'absolute',
-                top: `${
-                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
-                }px`,
-                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+                top: `${top}px`,
+                left: `${triggerRect.left + offsetX}px`,
             };
         };
         let floatingStyles = ref({});
@@ -958,6 +971,7 @@ export default {
             });
             wwLib.getFrontDocument().addEventListener('click', handleClickOutside);
             wwLib.getFrontWindow().addEventListener('scroll', syncFloating);
+            wwLib.getFrontWindow().addEventListener('resize', syncFloating);
         });
 
         onBeforeUnmount(() => {
@@ -967,6 +981,8 @@ export default {
             }
             revertBlockScrolling();
             wwLib.getFrontDocument().removeEventListener('click', handleClickOutside);
+            wwLib.getFrontWindow().removeEventListener('scroll', syncFloating);
+            wwLib.getFrontWindow().removeEventListener('resize', syncFloating);
         });
 
         watch(
