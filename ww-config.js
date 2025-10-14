@@ -83,6 +83,7 @@ export default {
                 'boundOffset',
                 'dropdownWidth',
                 'dropdownMaxHeight',
+                'noMaxHeightInfobox',
                 'dropdownBorder',
                 'dropdownBorderAll',
                 'dropdownBorderTop',
@@ -184,6 +185,7 @@ export default {
                 'virtualScrollBuffer',
                 'virtualScrollMinItemSize',
                 'heavyMode',
+                'heavyModeInfobox',
                 'itemSize',
             ],
             ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
@@ -922,6 +924,19 @@ export default {
                 tooltip: heavyModeHelp,
             },
             /* wwEditor:end */
+        },
+        heavyModeInfobox: {
+            type: 'InfoBox',
+            section: 'settings',
+            editorOnly: true,
+            options: {
+                variant: 'warning',
+                icon: 'warning',
+                title: 'Dropdown max-height required',
+                content:
+                    'Heavy mode requires a fixed max-height on the dropdown to work properly. Please set the "Max-height" property in the Dropdown section.',
+            },
+            hidden: content => !content.heavyMode || !!content.dropdownMaxHeight,
         },
         itemSize: {
             label: { en: 'Item size' },
@@ -2056,6 +2071,19 @@ export default {
             bindable: true,
             responsive: true,
             bindable: true,
+        },
+        noMaxHeightInfobox: {
+            type: 'InfoBox',
+            editorOnly: true,
+            options: content => ({
+                variant: 'warning',
+                icon: 'warning',
+                title: 'Many options detected',
+                content: `You have ${
+                    content.choices?.length || 0
+                } options and no max-height has been set. A default max-height of 500px has been applied to the dropdown to prevent performance issues.`,
+            }),
+            hidden: content => !!content.dropdownMaxHeight || !content.choices?.length || content.choices.length <= 100,
         },
         dropdownBorder: {
             type: 'TextRadioGroup',

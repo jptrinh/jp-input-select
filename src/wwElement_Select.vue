@@ -227,9 +227,12 @@ export default {
                       'border-left': props.content.dropdownBorderLeft,
                   };
 
+            // Use default max-height of 500px if not defined, required for virtual scrolling
+            const maxHeight = props.content.dropdownMaxHeight || '500px';
+
             return {
                 width: props.content.dropdownWidth,
-                'max-height': props.content.dropdownMaxHeight,
+                'max-height': maxHeight,
                 'border-radius': props.content.dropdownBorderRadius,
                 padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
