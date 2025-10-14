@@ -8,7 +8,6 @@
         :buffer="virtualScrollBuffer"
         :key="'heavy-' + filteredOptions.length"
         key-field="id"
-        page-mode
     >
         <template v-slot="{ item, index }">
             <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
@@ -27,7 +26,6 @@
         :min-item-size="virtualScrollMinItemSize"
         :buffer="virtualScrollBuffer"
         :key="'dynamic-' + filteredOptions.length"
-        page-mode
     >
         <template v-slot="{ item, index, active }">
             <DynamicScrollerItem
