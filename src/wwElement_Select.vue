@@ -237,7 +237,6 @@ export default {
                 padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
                 'box-shadow': props.content.dropdownShadows,
-                overflow: 'hidden',
                 display: 'flex',
                 'flex-direction': 'column',
                 ...dropdownBorderCss,
@@ -664,12 +663,20 @@ export default {
         wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
         const preventDefault = e => {
+            // Allow scrolling inside the dropdown element
+            if (dropdownElement.value && dropdownElement.value.contains(e.target)) {
+                return;
+            }
             e.preventDefault();
         };
 
         const preventDefaultForScrollKeys = e => {
             const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
             if (keys[e.keyCode]) {
+                // Allow scrolling inside the dropdown element
+                if (dropdownElement.value && dropdownElement.value.contains(document.activeElement)) {
+                    return;
+                }
                 preventDefault(e);
                 return false;
             }
