@@ -237,7 +237,9 @@ export default {
                 padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
                 'box-shadow': props.content.dropdownShadows,
-                overflow: 'auto',
+                overflow: 'hidden',
+                display: 'flex',
+                'flex-direction': 'column',
                 ...dropdownBorderCss,
             };
         });

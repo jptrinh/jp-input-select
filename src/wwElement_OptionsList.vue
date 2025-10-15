@@ -2,13 +2,13 @@
     <!-- Heavy Mode: RecycleScroller for better performance with large lists -->
     <RecycleScroller
         v-if="heavyMode && filteredOptions.length > 0"
-        style="height: 100%"
+        class="scroller"
+        :style="scrollerStyle"
         :items="dynamicScrollerItems"
         :item-size="itemSize"
         :buffer="virtualScrollBuffer"
         :key="'heavy-' + filteredOptions.length"
         key-field="id"
-        page-mode
     >
         <template v-slot="{ item, index }">
             <wwLayoutItemContext :key="index" is-repeat :index="index" :data="item">
@@ -22,12 +22,12 @@
     <!-- Normal Mode: DynamicScroller with automatic size detection -->
     <DynamicScroller
         v-else-if="!heavyMode && filteredOptions.length > 0"
-        style="height: 100%"
+        class="scroller"
+        :style="scrollerStyle"
         :items="dynamicScrollerItems"
         :min-item-size="virtualScrollMinItemSize"
         :buffer="virtualScrollBuffer"
         :key="'dynamic-' + filteredOptions.length"
-        page-mode
     >
         <template v-slot="{ item, index, active }">
             <DynamicScrollerItem
@@ -183,6 +183,15 @@ export default {
         });
 
         // Styles
+        const scrollerStyle = computed(() => {
+            // Use flex: 1 to take all available space in the flex container
+            // This ensures the scroller has a definite height for virtual scrolling
+            return {
+                flex: '1',
+                'min-height': '0', // Important for flex children to shrink below content size
+            };
+        });
+
         const emptyStateStyle = computed(() => {
             return {
                 'font-family': props.content.emptyStateFontFamily,
@@ -224,6 +233,7 @@ export default {
             itemSize,
             showEmptyStateInEditor,
             dynamicScrollerItems,
+            scrollerStyle,
             emptyStateStyle,
         };
     },
