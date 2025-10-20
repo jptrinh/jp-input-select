@@ -886,7 +886,6 @@ export default {
                 tooltip: bufferHelp,
             },
             /* wwEditor:end */
-            hidden: content => !content.virtualScroll,
         },
         virtualScrollMinItemSize: {
             label: { en: 'Min item size' },
