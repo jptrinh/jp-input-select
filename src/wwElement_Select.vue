@@ -440,21 +440,12 @@ export default {
             const triggerRect = triggerElement.value.getBoundingClientRect();
             const offsetY = parseInt(props.content.offsetY) || 0;
             const offsetX = parseInt(props.content.offsetX) || 0;
-            const viewportHeight = wwLib.getFrontWindow()?.innerHeight || window.innerHeight;
 
-            const estimatedDropdownHeight = parseInt(props.content.dropdownMaxHeight) || 300;
-            const spaceBelow = viewportHeight - triggerRect.bottom;
-            const spaceAbove = triggerRect.top;
-
-            let top = triggerRect.bottom + offsetY;
-
-            if (estimatedDropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
-                top = triggerRect.top - estimatedDropdownHeight - offsetY;
-            }
-
+            // Initial positioning: always below the trigger
+            // syncFloating() will adjust with actual dropdown height in nextTick
             floatingStyles.value = {
                 position: 'absolute',
-                top: `${top}px`,
+                top: `${triggerRect.bottom + offsetY}px`,
                 left: `${triggerRect.left + offsetX}px`,
             };
 
