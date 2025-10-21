@@ -491,9 +491,13 @@ export default {
             isOpen.value = true;
 
             nextTick(() => {
-                console.log('⏭️ nextTick in openDropdown - calling syncFloating');
-                syncFloating();
-                if (autoFocusSearch.value) focusSearch();
+                console.log('⏭️ First nextTick - waiting for render');
+                // Wait for the dropdown to be fully rendered with proper height
+                nextTick(() => {
+                    console.log('⏭️ Second nextTick - calling syncFloating');
+                    syncFloating();
+                    if (autoFocusSearch.value) focusSearch();
+                });
             });
         }
 
