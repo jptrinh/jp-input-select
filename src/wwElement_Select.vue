@@ -203,8 +203,10 @@ export default {
 
             let top = triggerRect.bottom + offsetY;
 
-            // Auto-flip: if not enough space below, place above
-            const dropdownHeight = dropdownElement.value?.getBoundingClientRect().height || 300;
+            const actualDropdownHeight = dropdownElement.value?.getBoundingClientRect().height || 0;
+            const estimatedDropdownHeight = parseInt(props.content.dropdownMaxHeight) || 300;
+            const dropdownHeight = actualDropdownHeight > 50 ? actualDropdownHeight : estimatedDropdownHeight;
+
             const spaceBelow = viewportHeight - triggerRect.bottom;
             const spaceAbove = triggerRect.top;
 
@@ -433,18 +435,35 @@ export default {
 
         function openDropdown() {
             if (isDisabled.value || isReadonly.value) return;
-            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            if (!triggerElement?.value) return;
+
+            const triggerRect = triggerElement.value.getBoundingClientRect();
+            const offsetY = parseInt(props.content.offsetY) || 0;
+            const offsetX = parseInt(props.content.offsetX) || 0;
+            const viewportHeight = wwLib.getFrontWindow()?.innerHeight || window.innerHeight;
+
+            const estimatedDropdownHeight = parseInt(props.content.dropdownMaxHeight) || 300;
+            const spaceBelow = viewportHeight - triggerRect.bottom;
+            const spaceAbove = triggerRect.top;
+
+            let top = triggerRect.bottom + offsetY;
+
+            if (estimatedDropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
+                top = triggerRect.top - estimatedDropdownHeight - offsetY;
+            }
+
             floatingStyles.value = {
                 position: 'absolute',
-                top: `${
-                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
-                }px`,
-                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+                top: `${top}px`,
+                left: `${triggerRect.left + offsetX}px`,
             };
 
             isOpen.value = true;
-            nextTick(syncFloating);
-            if (autoFocusSearch.value) focusSearch();
+
+            nextTick(() => {
+                syncFloating();
+                if (autoFocusSearch.value) focusSearch();
+            });
         }
 
         function closeDropdown() {
