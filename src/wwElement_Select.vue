@@ -210,8 +210,31 @@ export default {
             const spaceBelow = viewportHeight - triggerRect.bottom;
             const spaceAbove = triggerRect.top;
 
+            console.log('🔍 syncFloating called:', {
+                triggerRect: {
+                    top: triggerRect.top,
+                    bottom: triggerRect.bottom,
+                    left: triggerRect.left,
+                    right: triggerRect.right,
+                    width: triggerRect.width,
+                    height: triggerRect.height,
+                },
+                viewportHeight,
+                offsetY,
+                offsetX,
+                actualDropdownHeight,
+                estimatedDropdownHeight,
+                dropdownHeight: dropdownHeight,
+                spaceBelow,
+                spaceAbove,
+                shouldFlipAbove: dropdownHeight > spaceBelow && spaceAbove > spaceBelow,
+            });
+
             if (dropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
                 top = triggerRect.top - dropdownHeight - offsetY;
+                console.log('✅ Flipping above. New top:', top);
+            } else {
+                console.log('✅ Staying below. Top:', top);
             }
 
             floatingStyles.value = {
@@ -219,6 +242,8 @@ export default {
                 top: `${top}px`,
                 left: `${triggerRect.left + offsetX}px`,
             };
+
+            console.log('📍 Final floatingStyles:', floatingStyles.value);
         };
         let floatingStyles = ref({});
 
@@ -441,6 +466,18 @@ export default {
             const offsetY = parseInt(props.content.offsetY) || 0;
             const offsetX = parseInt(props.content.offsetX) || 0;
 
+            console.log('🚀 openDropdown called:', {
+                triggerRect: {
+                    top: triggerRect.top,
+                    bottom: triggerRect.bottom,
+                    left: triggerRect.left,
+                    width: triggerRect.width,
+                    height: triggerRect.height,
+                },
+                offsetY,
+                offsetX,
+            });
+
             // Initial positioning: always below the trigger
             // syncFloating() will adjust with actual dropdown height in nextTick
             floatingStyles.value = {
@@ -449,9 +486,12 @@ export default {
                 left: `${triggerRect.left + offsetX}px`,
             };
 
+            console.log('📍 Initial floatingStyles:', floatingStyles.value);
+
             isOpen.value = true;
 
             nextTick(() => {
+                console.log('⏭️ nextTick in openDropdown - calling syncFloating');
                 syncFloating();
                 if (autoFocusSearch.value) focusSearch();
             });
