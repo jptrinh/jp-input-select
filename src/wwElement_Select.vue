@@ -479,7 +479,7 @@ export default {
             });
 
             // Initial positioning: always below the trigger
-            // syncFloating() will adjust with actual dropdown height in nextTick
+            // syncFloating() will adjust with actual dropdown height after render
             floatingStyles.value = {
                 position: 'absolute',
                 top: `${triggerRect.bottom + offsetY}px`,
@@ -491,10 +491,10 @@ export default {
             isOpen.value = true;
 
             nextTick(() => {
-                console.log('⏭️ First nextTick - waiting for render');
-                // Wait for the dropdown to be fully rendered with proper height
-                nextTick(() => {
-                    console.log('⏭️ Second nextTick - calling syncFloating');
+                console.log('⏭️ nextTick - waiting for layout');
+                // Wait for browser to complete layout calculations
+                requestAnimationFrame(() => {
+                    console.log('🎬 requestAnimationFrame - calling syncFloating');
                     syncFloating();
                     if (autoFocusSearch.value) focusSearch();
                 });
