@@ -196,13 +196,28 @@ export default {
         // Styles
         const syncFloating = () => {
             if (!triggerElement?.value) return;
-            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            const triggerRect = triggerElement.value.getBoundingClientRect();
+            const offsetY = parseInt(props.content.offsetY) || 0;
+            const offsetX = parseInt(props.content.offsetX) || 0;
+            const viewportHeight = wwLib.getFrontWindow()?.innerHeight || window.innerHeight;
+
+            let top = triggerRect.bottom + offsetY;
+
+            const actualDropdownHeight = dropdownElement.value?.getBoundingClientRect().height || 0;
+            const estimatedDropdownHeight = parseInt(props.content.dropdownMaxHeight) || 300;
+            const dropdownHeight = actualDropdownHeight > 50 ? actualDropdownHeight : estimatedDropdownHeight;
+
+            const spaceBelow = viewportHeight - triggerRect.bottom;
+            const spaceAbove = triggerRect.top;
+
+            if (dropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
+                top = triggerRect.top - dropdownHeight - offsetY;
+            }
+
             floatingStyles.value = {
                 position: 'absolute',
-                top: `${
-                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
-                }px`,
-                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+                top: `${top}px`,
+                left: `${triggerRect.left + offsetX}px`,
             };
         };
         let floatingStyles = ref({});
@@ -420,18 +435,29 @@ export default {
 
         function openDropdown() {
             if (isDisabled.value || isReadonly.value) return;
-            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            if (!triggerElement?.value) return;
+
+            const triggerRect = triggerElement.value.getBoundingClientRect();
+            const offsetY = parseInt(props.content.offsetY) || 0;
+            const offsetX = parseInt(props.content.offsetX) || 0;
+
+            // Initial positioning: always below the trigger
+            // syncFloating() will adjust with actual dropdown height after render
             floatingStyles.value = {
                 position: 'absolute',
-                top: `${
-                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
-                }px`,
-                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+                top: `${triggerRect.bottom + offsetY}px`,
+                left: `${triggerRect.left + offsetX}px`,
             };
 
             isOpen.value = true;
-            nextTick(syncFloating);
-            if (autoFocusSearch.value) focusSearch();
+
+            nextTick(() => {
+                // Wait for browser to complete layout calculations
+                requestAnimationFrame(() => {
+                    syncFloating();
+                    if (autoFocusSearch.value) focusSearch();
+                });
+            });
         }
 
         function closeDropdown() {
@@ -958,6 +984,7 @@ export default {
             });
             wwLib.getFrontDocument().addEventListener('click', handleClickOutside);
             wwLib.getFrontWindow().addEventListener('scroll', syncFloating);
+            wwLib.getFrontWindow().addEventListener('resize', syncFloating);
         });
 
         onBeforeUnmount(() => {
@@ -967,6 +994,8 @@ export default {
             }
             revertBlockScrolling();
             wwLib.getFrontDocument().removeEventListener('click', handleClickOutside);
+            wwLib.getFrontWindow().removeEventListener('scroll', syncFloating);
+            wwLib.getFrontWindow().removeEventListener('resize', syncFloating);
         });
 
         watch(
