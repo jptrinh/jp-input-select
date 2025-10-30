@@ -15,138 +15,162 @@ export default {
         label: 'Select',
         icon: 'select',
         customStylePropertiesOrder: [
-            [
-                'selectedTitle',
-                'selectedFontFamily',
-                'selectedFontSize',
-                'selectedFontWeight',
-                'selectedFontColor',
-                'selectedPadding',
-                'selectedTextAlign',
-            ],
-            [
-                'placeholderTitle',
-                'placeholderFontFamily',
-                'placeholderFontSize',
-                'placeholderFontWeight',
-                'placeholderFontColor',
-                'placeholderTextAlign',
-            ],
-            [
-                'chipStylesTitle',
-                'chipFontFamily',
-                'chipFontSize',
-                'chipFontWeight',
-                'chipFontColor',
-                'chipPadding',
-                'chipBgColor',
-                'chipBorder',
-                'chipBorderAll',
-                'chipBorderTop',
-                'chipBorderRight',
-                'chipBorderBottom',
-                'chipBorderLeft',
-                'chipBorderRadius',
-                'chipIconUnselect',
-                'chipIconColor',
-                'chipIconSize',
-                'chipImageSize',
-                'chipImageRadius',
-            ],
-            [
-                'triggerStylesTitle',
-                'triggerHeight',
-                'triggerBorder',
-                'triggerBorderAll',
-                'triggerBorderTop',
-                'triggerBorderRight',
-                'triggerBorderBottom',
-                'triggerBorderLeft',
-                'triggerBorderRadius',
-                'triggerBgColor',
-                'triggerShadows',
-                'triggerPadding',
-                'triggerMargin',
-                'triggerIconClose',
-                'triggerIconOpen',
-                'triggerIconSize',
-                'triggerIconColor',
-                'triggerImageSize',
-                'triggerImageRadius',
-            ],
-            [
-                'dropdownStylesTitle',
-                'side',
-                'align',
-                'offsetX',
-                'offsetY',
-                'boundOffset',
-                'dropdownWidth',
-                'dropdownMaxHeight',
-                'noMaxHeightInfobox',
-                'dropdownBorder',
-                'dropdownBorderAll',
-                'dropdownBorderTop',
-                'dropdownBorderRight',
-                'dropdownBorderBottom',
-                'dropdownBorderLeft',
-                'dropdownBorderRadius',
-                'dropdownBgColor',
-                'dropdownShadows',
-                'dropdownPadding',
-                'zIndexOpen',
-            ],
-            [
-                'optionStylesTitle',
-                'optionFontFamily',
-                'optionFontSize',
-                'optionFontWeight',
-                'optionFontColor',
-                'optionSpacing',
-                'optionPadding',
-                'optionBorder',
-                'optionBorderRadius',
-                'optionBgColor',
-                'optionBgColorFocused',
-                'optionBgColorHover',
-                'optionCursor',
-                'optionIcon',
-                'optionIconSize',
-                'optionIconColor',
-                'optionImageSize',
-                'optionImageRadius',
-            ],
-            [
-                'emptyStateStylesTitle',
-                'emptyStateFontFamily',
-                'emptyStateFontSize',
-                'emptyStateFontWeight',
-                'emptyStateFontColor',
-                'emptyStatePadding',
-                'emptyStateTextAlign',
-            ],
-            [
-                'searchStylesTitle',
-                'searchWidth',
-                'searchHeight',
-                'searchBorder',
-                'searchBorderAll',
-                'searchBorderTop',
-                'searchBorderRight',
-                'searchBorderBottom',
-                'searchBorderLeft',
-                'searchBorderRadius',
-                'searchPadding',
-                'searchMargin',
-                'searchOutline',
-                'searchOutlineOffset',
-                'searchBgColor',
-                'searchFontFamily',
-                'searchFontSize',
-                'searchFontWeight',
-                'searchFontColor',
-                'searchPlaceholderColor',
-            ],
+            {
+                label: "Selected",
+                isCollapsible: true,
+                properties: [
+                    'selectedFontFamily',
+                    'selectedFontSize',
+                    'selectedFontWeight',
+                    'selectedFontColor',
+                    'selectedPadding',
+                    'selectedTextAlign',
+                ],
+            },
+            {
+                label: "Placeholder",
+                isCollapsible: true,
+                properties:       [
+                    'placeholderFontFamily',
+                    'placeholderFontSize',
+                    'placeholderFontWeight',
+                    'placeholderFontColor',
+                    'placeholderTextAlign',
+                ],
+            },
+            {
+                label: "Chip",
+                isCollapsible: true,
+                properties: [
+                    'chipFontFamily',
+                    'chipFontSize',
+                    'chipFontWeight',
+                    'chipFontColor',
+                    'chipPadding',
+                    'chipBgColor',
+                    'chipBorder',
+                    'chipBorderAll',
+                    'chipBorderTop',
+                    'chipBorderRight',
+                    'chipBorderBottom',
+                    'chipBorderLeft',
+                    'chipBorderRadius',
+                    'chipIconUnselect',
+                    'chipIconColor',
+                    'chipIconSize',
+                    'chipImageSize',
+                    'chipImageRadius',
+                ],
+            },
+            {
+                label: "Trigger",
+                isCollapsible: true,
+                properties: [
+                    'triggerHeight',
+                    'triggerBorder',
+                    'triggerBorderAll',
+                    'triggerBorderTop',
+                    'triggerBorderRight',
+                    'triggerBorderBottom',
+                    'triggerBorderLeft',
+                    'triggerBorderRadius',
+                    'triggerBgColor',
+                    'triggerShadows',
+                    'triggerPadding',
+                    'triggerMargin',
+                    'triggerIconClose',
+                    'triggerIconOpen',
+                    'triggerIconSize',
+                    'triggerIconColor',
+                    'triggerImageSize',
+                    'triggerImageRadius',
+                ],
+            },
+            {
+                label: "Dropdown",
+                isCollapsible: true,
+                properties: [
+                    'side',
+                    'align',
+                    'offsetX',
+                    'offsetY',
+                    'boundOffset',
+                    'dropdownWidth',
+                    'dropdownMaxHeight',
+                    'noMaxHeightInfobox',
+                    'dropdownBorder',
+                    'dropdownBorderAll',
+                    'dropdownBorderTop',
+                    'dropdownBorderRight',
+                    'dropdownBorderBottom',
+                    'dropdownBorderLeft',
+                    'dropdownBorderRadius',
+                    'dropdownBgColor',
+                    'dropdownShadows',
+                    'dropdownPadding',
+                    'zIndexOpen',
+                ],
+            },
+            {
+                label: "Option",
+                isCollapsible: true,
+                properties: [
+                    'optionFontFamily',
+                    'optionFontSize',
+                    'optionFontWeight',
+                    'optionFontColor',
+                    'optionSpacing',
+                    'optionPadding',
+                    'optionBorder',
+                    'optionBorderRadius',
+                    'optionBgColor',
+                    'optionBgColorFocused',
+                    'optionBgColorHover',
+                    'optionCursor',
+                    'optionIcon',
+                    'optionIconSize',
+                    'optionIconColor',
+                    'optionImageSize',
+                    'optionImageRadius',
+                ],
+            },
+            {
+                label: "Empty state",
+                isCollapsible: true,
+                properties: [
+                    'emptyStateFontFamily',
+                    'emptyStateFontSize',
+                    'emptyStateFontWeight',
+                    'emptyStateFontColor',
+                    'emptyStatePadding',
+                    'emptyStateTextAlign',
+                ],
+            },
+            {
+                label: "Search",
+                isCollapsible: true,
+                properties: [
+                    'searchWidth',
+                    'searchHeight',
+                    'searchBorder',
+                    'searchBorderAll',
+                    'searchBorderTop',
+                    'searchBorderRight',
+                    'searchBorderBottom',
+                    'searchBorderLeft',
+                    'searchBorderRadius',
+                    'searchPadding',
+                    'searchMargin',
+                    'searchOutline',
+                    'searchOutlineOffset',
+                    'searchBgColor',
+                    'searchFontFamily',
+                    'searchFontSize',
+                    'searchFontWeight',
+                    'searchFontColor',
+                    'searchPlaceholderColor',
+                ],
+            },
         ],
         customSettingsPropertiesOrder: [
             'forceOpenInEditor',
@@ -161,34 +185,44 @@ export default {
             'initValueSingle',
             'initValueMulti',
             'allowScrollingWhenOpen',
-            [
-                'triggerTitle',
-                'placeholder',
-                'emptyStateText',
-                'searchPlaceholder',
-                'initialState',
-                'selectType',
-                'selectTypeWarning',
-            ],
-            [
-                'optionsTitle',
-                'disabled',
-                'required',
-                'readonly',
-                'limit',
-                'unselectOnClick',
-                'closeOnSelect',
-                'closeOnClickOutside',
-                'manualTrigger',
-                'selectOnClick',
-                'virtualScroll',
-                'virtualScrollBuffer',
-                'virtualScrollMinItemSize',
-                'heavyMode',
-                'heavyModeInfobox',
-                'itemSize',
-            ],
-            ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
+            {
+                label: "Trigger",
+                isCollapsible: true,
+                properties: [
+                    'placeholder',
+                    'emptyStateText',
+                    'searchPlaceholder',
+                    'initialState',
+                    'selectType',
+                    'selectTypeWarning',
+                ],
+            },
+            {
+                label: "Options",
+                isCollapsible: true,
+                properties: [
+                    'disabled',
+                    'required',
+                    'readonly',
+                    'limit',
+                    'unselectOnClick',
+                    'closeOnSelect',
+                    'closeOnClickOutside',
+                    'manualTrigger',
+                    'selectOnClick',
+                    'virtualScroll',
+                    'virtualScrollBuffer',
+                    'virtualScrollMinItemSize',
+                    'heavyMode',
+                    'heavyModeInfobox',
+                    'itemSize',
+                ],
+            },  
+            {
+                label: "Search",
+                isCollapsible: true,
+                properties: ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
+            },        
             'formInfobox',
             ['fieldName', 'customValidation', 'validation'],
         ],
@@ -630,15 +664,6 @@ export default {
         },
 
         // >>>>>>>>>>> TRIGGER <<<<<<<<<<
-        triggerTitle: {
-            section: 'settings',
-            hidden: content => content.customMenu,
-            type: 'Title',
-            label: {
-                en: 'Trigger',
-            },
-            editorOnly: true,
-        },
         placeholder: {
             label: {
                 en: 'Placeholder',
@@ -860,15 +885,6 @@ export default {
         },
 
         // >>>>>>>>>>> OPTION LIST <<<<<<<<<<
-        optionsTitle: {
-            section: 'settings',
-            hidden: content => content.customMenu,
-            type: 'Title',
-            label: {
-                en: 'Options',
-            },
-            editorOnly: true,
-        },
         virtualScrollBuffer: {
             label: { en: 'Buffer' },
             type: 'Number',
@@ -1029,15 +1045,6 @@ export default {
         },
 
         // >>>>>>>>>>> SEARCH <<<<<<<<<<
-        searchTitle: {
-            section: 'settings',
-            hidden: content => content.customMenu,
-            type: 'Title',
-            label: {
-                en: 'Search',
-            },
-            editorOnly: true,
-        },
         showSearch: {
             label: { en: 'Search' },
             type: 'OnOff',
@@ -1182,11 +1189,6 @@ export default {
         /* ------------------------------------
             SELECTED STYLES
         ------------------------------------- */
-        selectedTitle: {
-            type: 'Title',
-            label: { en: 'Selected' },
-            hidden: content => content.selectType !== 'single',
-        },
         selectedFontFamily: {
             label: {
                 en: 'Font family',
@@ -1306,10 +1308,6 @@ export default {
         /* ------------------------------------
             PLACEHOLDER STYLES
         ------------------------------------- */
-        placeholderTitle: {
-            type: 'Title',
-            label: { en: 'Placeholder' },
-        },
         placeholderFontFamily: {
             label: {
                 en: 'Font family',
@@ -1413,14 +1411,6 @@ export default {
         /* ------------------------------------
             CHIP STYLES
         ------------------------------------- */
-        chipStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Chip',
-            },
-            editorOnly: true,
-            hidden: content => content.selectType == 'single',
-        },
         chipFontFamily: {
             label: {
                 en: 'Font family',
@@ -1726,13 +1716,6 @@ export default {
         /* ------------------------------------
             TRIGGER STYLES
         ------------------------------------- */
-        triggerStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Trigger',
-            },
-            editorOnly: true,
-        },
         // triggerWidth: {
         //     type: 'Length',
         //     label: {
@@ -2023,13 +2006,6 @@ export default {
         /* ------------------------------------
             DROPDOWN STYLES
         ------------------------------------- */
-        dropdownStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Dropdown',
-            },
-            editorOnly: true,
-        },
         dropdownWidth: {
             type: 'Length',
             label: {
@@ -2224,13 +2200,6 @@ export default {
         /* ------------------------------------
             OPTION STYLES
         ------------------------------------- */
-        optionStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Option',
-            },
-            editorOnly: true,
-        },
         optionFontFamily: {
             label: {
                 en: 'Font family',
@@ -2532,13 +2501,6 @@ export default {
         /* ------------------------------------
             EMPTY STYLES
         ------------------------------------- */
-        emptyStateStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Empty state',
-            },
-            editorOnly: true,
-        },
         emptyStateFontFamily: {
             label: {
                 en: 'Font family',
@@ -2634,14 +2596,6 @@ export default {
         /* ------------------------------------
             SEARCH STYLES
         ------------------------------------- */
-        searchStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Search',
-            },
-            editorOnly: true,
-            hidden: content => !content.showSearch,
-        },
         searchWidth: {
             type: 'Length',
             label: {
