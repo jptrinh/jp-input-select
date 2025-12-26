@@ -1,147 +1,185 @@
-const virtualScrollHelp =
-    'Virtual scrolling optimizes performance by only rendering visible options and a small buffer around them. When enabled, this feature can significantly improve loading and scrolling performance for large lists.</br></br>Important notes:</br>- The layout will be forced to a vertical list format</br>- Option items must be positioned at the root level of the Options List';
-
 const bufferHelp =
-    'The buffer is the amount of pixel to add to edges of the scrolling visible area to start rendering items further away.';
+    'The buffer is the amount of pixels to add to edges of the scrolling visible area to start rendering items further away. Virtual scrolling is always enabled and optimizes performance by only rendering visible options.';
 
-const minItemSizeHelp = 'The minimum height of an item in the virtual scroll.';
+const minItemSizeHelp =
+    'The minimum height of an item in pixels. Used by the dynamic scroller to estimate sizes before items are rendered.';
+
+const heavyModeHelp =
+    'Heavy mode uses RecycleScroller for better performance with large lists (1000+ items). When enabled, you must specify the exact item size. When disabled, DynamicScroller is used which automatically detects item sizes but may be slower with very large lists.';
+
+const itemSizeHelp =
+    'The exact height (in pixels) of each option item. All items must have the same height when using heavy mode.';
 
 export default {
     editor: {
         label: 'Select',
         icon: 'select',
         customStylePropertiesOrder: [
-            [
-                'selectedTitle',
-                'selectedFontFamily',
-                'selectedFontSize',
-                'selectedFontWeight',
-                'selectedFontColor',
-                'selectedPadding',
-                'selectedTextAlign',
-            ],
-            [
-                'placeholderTitle',
-                'placeholderFontFamily',
-                'placeholderFontSize',
-                'placeholderFontWeight',
-                'placeholderFontColor',
-                'placeholderTextAlign',
-            ],
-            [
-                'chipStylesTitle',
-                'chipFontFamily',
-                'chipFontSize',
-                'chipFontWeight',
-                'chipFontColor',
-                'chipPadding',
-                'chipBgColor',
-                'chipBorder',
-                'chipBorderAll',
-                'chipBorderTop',
-                'chipBorderRight',
-                'chipBorderBottom',
-                'chipBorderLeft',
-                'chipBorderRadius',
-                'chipIconUnselect',
-                'chipIconColor',
-                'chipIconSize',
-            ],
-            [
-                'triggerStylesTitle',
-                'triggerHeight',
-                'triggerBorder',
-                'triggerBorderAll',
-                'triggerBorderTop',
-                'triggerBorderRight',
-                'triggerBorderBottom',
-                'triggerBorderLeft',
-                'triggerBorderRadius',
-                'triggerBgColor',
-                'triggerShadows',
-                'triggerPadding',
-                'triggerMargin',
-                'triggerIconClose',
-                'triggerIconOpen',
-                'triggerIconSize',
-                'triggerIconColor',
-            ],
-            [
-                'dropdownStylesTitle',
-                'side',
-                'align',
-                'offsetX',
-                'offsetY',
-                'boundOffset',
-                'dropdownWidth',
-                'dropdownMaxHeight',
-                'dropdownBorder',
-                'dropdownBorderAll',
-                'dropdownBorderTop',
-                'dropdownBorderRight',
-                'dropdownBorderBottom',
-                'dropdownBorderLeft',
-                'dropdownBorderRadius',
-                'dropdownBgColor',
-                'dropdownShadows',
-                'dropdownPadding',
-                'zIndexOpen',
-            ],
-            [
-                'optionStylesTitle',
-                'optionFontFamily',
-                'optionFontSize',
-                'optionFontWeight',
-                'optionFontColor',
-                'optionSpacing',
-                'optionPadding',
-                'optionBorder',
-                'optionBorderRadius',
-                'optionBgColor',
-                'optionBgColorFocused',
-                'optionBgColorHover',
-                'optionCursor',
-                'optionIcon',
-                'optionIconSize',
-                'optionIconColor',
-            ],
-            [
-                'emptyStateStylesTitle',
-                'emptyStateFontFamily',
-                'emptyStateFontSize',
-                'emptyStateFontWeight',
-                'emptyStateFontColor',
-                'emptyStatePadding',
-                'emptyStateTextAlign',
-            ],
-            [
-                'searchStylesTitle',
-                'searchWidth',
-                'searchHeight',
-                'searchBorder',
-                'searchBorderAll',
-                'searchBorderTop',
-                'searchBorderRight',
-                'searchBorderBottom',
-                'searchBorderLeft',
-                'searchBorderRadius',
-                'searchPadding',
-                'searchMargin',
-                'searchOutline',
-                'searchOutlineOffset',
-                'searchBgColor',
-                'searchFontFamily',
-                'searchFontSize',
-                'searchFontWeight',
-                'searchFontColor',
-                'searchPlaceholderColor',
-            ],
+            {
+                label: 'Selected',
+                isCollapsible: true,
+                properties: [
+                    'selectedFontFamily',
+                    'selectedFontSize',
+                    'selectedFontWeight',
+                    'selectedFontColor',
+                    'selectedPadding',
+                    'selectedTextAlign',
+                ],
+            },
+            {
+                label: 'Placeholder',
+                isCollapsible: true,
+                properties: [
+                    'placeholderFontFamily',
+                    'placeholderFontSize',
+                    'placeholderFontWeight',
+                    'placeholderFontColor',
+                    'placeholderTextAlign',
+                ],
+            },
+            {
+                label: 'Chip',
+                isCollapsible: true,
+                properties: [
+                    'chipFontFamily',
+                    'chipFontSize',
+                    'chipFontWeight',
+                    'chipFontColor',
+                    'chipPadding',
+                    'chipBgColor',
+                    'chipBorder',
+                    'chipBorderAll',
+                    'chipBorderTop',
+                    'chipBorderRight',
+                    'chipBorderBottom',
+                    'chipBorderLeft',
+                    'chipBorderRadius',
+                    'chipIconUnselect',
+                    'chipIconColor',
+                    'chipIconSize',
+                    'chipImageSize',
+                    'chipImageRadius',
+                ],
+            },
+            {
+                label: 'Trigger',
+                isCollapsible: true,
+                properties: [
+                    'triggerHeight',
+                    'triggerBorder',
+                    'triggerBorderAll',
+                    'triggerBorderTop',
+                    'triggerBorderRight',
+                    'triggerBorderBottom',
+                    'triggerBorderLeft',
+                    'triggerBorderRadius',
+                    'triggerBgColor',
+                    'triggerShadows',
+                    'triggerPadding',
+                    'triggerMargin',
+                    'triggerIconClose',
+                    'triggerIconOpen',
+                    'triggerIconSize',
+                    'triggerIconColor',
+                    'triggerImageSize',
+                    'triggerImageRadius',
+                ],
+            },
+            {
+                label: 'Dropdown',
+                isCollapsible: true,
+                properties: [
+                    'side',
+                    'align',
+                    'offsetX',
+                    'offsetY',
+                    'boundOffset',
+                    'dropdownWidth',
+                    'dropdownMaxHeight',
+                    'noMaxHeightInfobox',
+                    'dropdownBorder',
+                    'dropdownBorderAll',
+                    'dropdownBorderTop',
+                    'dropdownBorderRight',
+                    'dropdownBorderBottom',
+                    'dropdownBorderLeft',
+                    'dropdownBorderRadius',
+                    'dropdownBgColor',
+                    'dropdownShadows',
+                    'dropdownPadding',
+                    'zIndexOpen',
+                ],
+            },
+            {
+                label: 'Option',
+                isCollapsible: true,
+                properties: [
+                    'optionFontFamily',
+                    'optionFontSize',
+                    'optionFontWeight',
+                    'optionFontColor',
+                    'optionSpacing',
+                    'optionPadding',
+                    'optionBorder',
+                    'optionBorderRadius',
+                    'optionBgColor',
+                    'optionBgColorFocused',
+                    'optionBgColorHover',
+                    'optionCursor',
+                    'optionIcon',
+                    'optionIconSize',
+                    'optionIconColor',
+                    'optionImageSize',
+                    'optionImageRadius',
+                ],
+            },
+            {
+                label: 'Empty state',
+                isCollapsible: true,
+                properties: [
+                    'emptyStateFontFamily',
+                    'emptyStateFontSize',
+                    'emptyStateFontWeight',
+                    'emptyStateFontColor',
+                    'emptyStatePadding',
+                    'emptyStateTextAlign',
+                ],
+            },
+            {
+                label: 'Search',
+                isCollapsible: true,
+                properties: [
+                    'searchWidth',
+                    'searchHeight',
+                    'searchBorder',
+                    'searchBorderAll',
+                    'searchBorderTop',
+                    'searchBorderRight',
+                    'searchBorderBottom',
+                    'searchBorderLeft',
+                    'searchBorderRadius',
+                    'searchPadding',
+                    'searchMargin',
+                    'searchOutline',
+                    'searchOutlineOffset',
+                    'searchBgColor',
+                    'searchFontFamily',
+                    'searchFontSize',
+                    'searchFontWeight',
+                    'searchFontColor',
+                    'searchPlaceholderColor',
+                ],
+            },
         ],
         customSettingsPropertiesOrder: [
             'forceOpenInEditor',
             'showEmptyStateInEditor',
+            'optionType',
             'choices',
             'mappingLabel',
+            'mappingIcon',
+            'mappingImage',
             'mappingValue',
             'mappingDisabled',
             'initValueSingle',
@@ -149,30 +187,44 @@ export default {
             'selectedPrefix',
             'selectedPrefixColor',
             'allowScrollingWhenOpen',
-            [
-                'triggerTitle',
-                'placeholder',
-                'emptyStateText',
-                'searchPlaceholder',
-                'initialState',
-                'selectType',
-                'selectTypeWarning',
-            ],
-            [
-                'optionsTitle',
-                'disabled',
-                'required',
-                'readonly',
-                'limit',
-                'unselectOnClick',
-                'closeOnSelect',
-                'closeOnClickOutside',
-                'manualTrigger',
-                'selectOnClick',
-                'virtualScrollBuffer',
-                'virtualScrollMinItemSize',
-            ],
-            ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
+            {
+                label: 'Trigger',
+                isCollapsible: true,
+                properties: [
+                    'placeholder',
+                    'emptyStateText',
+                    'searchPlaceholder',
+                    'initialState',
+                    'selectType',
+                    'selectTypeWarning',
+                ],
+            },
+            {
+                label: 'Options',
+                isCollapsible: true,
+                properties: [
+                    'disabled',
+                    'required',
+                    'readonly',
+                    'limit',
+                    'unselectOnClick',
+                    'closeOnSelect',
+                    'closeOnClickOutside',
+                    'manualTrigger',
+                    'selectOnClick',
+                    'virtualScroll',
+                    'virtualScrollBuffer',
+                    'virtualScrollMinItemSize',
+                    'heavyMode',
+                    'heavyModeInfobox',
+                    'itemSize',
+                ],
+            },
+            {
+                label: 'Search',
+                isCollapsible: true,
+                properties: ['searchTitle', 'showSearch', 'searchBy', 'autoFocus'],
+            },
             'formInfobox',
             ['fieldName', 'customValidation', 'validation'],
         ],
@@ -254,6 +306,31 @@ export default {
     ],
     properties: {
         // >>>>>>>>>>> SELECT <<<<<<<<<<
+        optionType: {
+            label: { en: 'Option type' },
+            type: 'TextSelect',
+            options: {
+                options: [
+                    { value: 'text', label: 'Text' },
+                    { value: 'iconText', label: 'Icon + Text' },
+                    { value: 'imageText', label: 'Image + Text' },
+                ],
+            },
+            defaultValue: 'text',
+            bindable: true,
+            responsive: true,
+            states: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "text", "iconText", or "imageText"',
+            },
+            propertyHelp: {
+                tooltip: 'Define how each option is displayed.\nPossible values: text, iconText, imageText',
+            },
+            /* wwEditor:end */
+        },
         choices: {
             label: {
                 en: 'Options',
@@ -279,6 +356,9 @@ export default {
                 ],
                 tooltip: 'A collection or an array of data: \n\n`myCollection` or `[{}, {}, ...]`',
             },
+            propertyHelp: {
+                tooltip: 'The list of options to display in the dropdown. Can be a collection or array of objects.',
+            },
             /* wwEditor:end */
             section: 'settings',
         },
@@ -299,6 +379,42 @@ export default {
             },
             /* wwEditor:end */
             section: 'settings',
+        },
+        mappingIcon: {
+            label: 'Icon per item',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+            defaultValue: {
+                type: 'f',
+                code: "context.mapping?.['icon'] || null",
+            },
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'The icon (system icon code) of the current option item. Used in Icon + Text mode.',
+            },
+            /* wwEditor:end */
+            section: 'settings',
+            hidden: content => content.optionType !== 'iconText',
+        },
+        mappingImage: {
+            label: 'Image per item',
+            type: 'Formula',
+            options: content => ({
+                template: Array.isArray(content.choices) ? content.choices[0] : null,
+            }),
+            defaultValue: {
+                type: 'f',
+                code: "context.mapping?.['image'] || null",
+            },
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'The image URL of the current option item. Used in Image + Text mode.',
+            },
+            /* wwEditor:end */
+            section: 'settings',
+            hidden: content => content.optionType !== 'imageText',
         },
         mappingValue: {
             label: 'Value per item',
@@ -353,6 +469,9 @@ export default {
                 ],
                 tooltip: 'A string value: \n\n`"myValue"`, or an array of values: \n\n`["myValue1", "myValue2"]`',
             },
+            propertyHelp: {
+                tooltip: 'The initial selected value for single select mode.',
+            },
             /* wwEditor:end */
             section: 'settings',
             hidden: content => content.selectType !== 'single',
@@ -379,6 +498,9 @@ export default {
                 ],
                 tooltip: 'An array of values: \n\n`["myValue1", "myValue2"]`',
             },
+            propertyHelp: {
+                tooltip: 'The initial selected values for multiple select mode.',
+            },
             /* wwEditor:end */
             hidden: content => content.selectType !== 'multiple',
         },
@@ -403,8 +525,10 @@ export default {
             /* wwEditor:start */
             bindingValidation: {
                 type: 'string',
-                enum: ['single', 'multiple'],
                 tooltip: 'A string value, either "single" or "multiple"',
+            },
+            propertyHelp: {
+                tooltip: 'Define whether users can select one or multiple options.\nPossible values: single, multiple',
             },
             /* wwEditor:end */
         },
@@ -417,6 +541,9 @@ export default {
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Disable the select component, preventing user interaction.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -431,6 +558,9 @@ export default {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
+            propertyHelp: {
+                tooltip: 'Make the select field required for form validation.',
+            },
             /* wwEditor:end */
             section: 'settings',
         },
@@ -444,6 +574,9 @@ export default {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
             },
+            propertyHelp: {
+                tooltip: 'Make the select read-only, showing the value but preventing changes.',
+            },
             /* wwEditor:end */
             section: 'settings',
         },
@@ -453,6 +586,11 @@ export default {
             defaultValue: false,
             editorOnly: true,
             section: 'settings',
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'Force the dropdown to stay open in the editor for easier design and configuration.',
+            },
+            /* wwEditor:end */
         },
         initialState: {
             label: { en: 'Initial state' },
@@ -468,6 +606,16 @@ export default {
             states: true,
             defaultValue: 'closed',
             section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "closed" or "open"',
+            },
+            propertyHelp: {
+                tooltip:
+                    'Determines whether the dropdown starts in an open or closed state.\nPossible values: closed, open',
+            },
+            /* wwEditor:end */
         },
         closeOnSelect: {
             label: { en: 'Close on select' },
@@ -527,15 +675,6 @@ export default {
         },
 
         // >>>>>>>>>>> TRIGGER <<<<<<<<<<
-        triggerTitle: {
-            section: 'settings',
-            hidden: content => content.customMenu,
-            type: 'Title',
-            label: {
-                en: 'Trigger',
-            },
-            editorOnly: true,
-        },
         placeholder: {
             label: {
                 en: 'Placeholder',
@@ -549,6 +688,10 @@ export default {
             responsive: true,
             multiLang: true,
             /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "Select a value"',
+            },
             propertyHelp: {
                 tooltip:
                     'The placeholder text for the select. Available in the formula explorer in the Trigger element.',
@@ -571,6 +714,10 @@ export default {
             responsive: true,
             multiLang: true,
             /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "No results found"',
+            },
             propertyHelp: {
                 tooltip:
                     'The text to display when there are no results. Available in the formula explorer in the Trigger element.',
@@ -593,6 +740,10 @@ export default {
             responsive: true,
             multiLang: true,
             /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "Search"',
+            },
             propertyHelp: {
                 tooltip:
                     'The placeholder text for the search input. Available in the formula explorer in the Trigger element.',
@@ -745,38 +896,10 @@ export default {
         },
 
         // >>>>>>>>>>> OPTION LIST <<<<<<<<<<
-        optionsTitle: {
-            section: 'settings',
-            hidden: content => content.customMenu,
-            type: 'Title',
-            label: {
-                en: 'Options',
-            },
-            editorOnly: true,
-        },
-        // virtualScroll: {
-        //     label: { en: 'Virtual scroll' },
-        //     type: 'OnOff',
-        //     defaultValue: true,
-        //     states: true,
-        //     bindable: true,
-        //     responsive: true,
-        //     section: 'settings',
-        //     hidden: true,
-        //     /* wwEditor:start */
-        //     bindingValidation: {
-        //         validations: [{ type: 'boolean' }],
-        //         tooltip: virtualScrollHelp,
-        //     },
-        //     propertyHelp: {
-        //         tooltip: virtualScrollHelp,
-        //     },
-        //     /* wwEditor:end */
-        // },
         virtualScrollBuffer: {
             label: { en: 'Buffer' },
             type: 'Number',
-            defaultValue: 600,
+            defaultValue: 200,
             states: true,
             bindable: true,
             responsive: true,
@@ -790,7 +913,6 @@ export default {
                 tooltip: bufferHelp,
             },
             /* wwEditor:end */
-            // hidden: content => !content.virtualScroll,
         },
         virtualScrollMinItemSize: {
             label: { en: 'Min item size' },
@@ -809,7 +931,57 @@ export default {
                 tooltip: minItemSizeHelp,
             },
             /* wwEditor:end */
-            // hidden: content => !content.virtualScroll,
+            hidden: content => content.heavyMode,
+        },
+        heavyMode: {
+            label: { en: 'Heavy mode' },
+            type: 'OnOff',
+            defaultValue: false,
+            states: true,
+            bindable: true,
+            responsive: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'boolean' }],
+                tooltip: heavyModeHelp,
+            },
+            propertyHelp: {
+                tooltip: heavyModeHelp,
+            },
+            /* wwEditor:end */
+        },
+        heavyModeInfobox: {
+            type: 'InfoBox',
+            section: 'settings',
+            editorOnly: true,
+            options: {
+                variant: 'warning',
+                icon: 'warning',
+                title: 'Dropdown max-height required',
+                content:
+                    'Heavy mode requires a fixed max-height on the dropdown to work properly. Please set the "Max-height" property in the Dropdown section.',
+            },
+            hidden: content => !content.heavyMode || !!content.dropdownMaxHeight,
+        },
+        itemSize: {
+            label: { en: 'Item size' },
+            type: 'Number',
+            defaultValue: 40,
+            states: true,
+            bindable: true,
+            responsive: true,
+            section: 'settings',
+            /* wwEditor:start */
+            bindingValidation: {
+                validations: [{ type: 'number' }],
+                tooltip: itemSizeHelp,
+            },
+            propertyHelp: {
+                tooltip: itemSizeHelp,
+            },
+            /* wwEditor:end */
+            hidden: content => !content.heavyMode,
         },
         showEmptyStateInEditor: {
             label: { en: 'Show empty state in editor' },
@@ -817,6 +989,11 @@ export default {
             defaultValue: false,
             editorOnly: true,
             section: 'settings',
+            /* wwEditor:start */
+            propertyHelp: {
+                tooltip: 'Display the empty state message in the editor when no options are available.',
+            },
+            /* wwEditor:end */
         },
         allowScrollingWhenOpen: {
             label: { en: 'Allow scrolling when open' },
@@ -872,19 +1049,13 @@ export default {
                 type: 'boolean',
                 tooltip: 'A boolean that defines if the option is automatically unselected on click: `true | false`',
             },
+            propertyHelp: {
+                tooltip: 'Whether the option should be automatically unselected when clicked if already selected.',
+            },
             /* wwEditor:end */
         },
 
         // >>>>>>>>>>> SEARCH <<<<<<<<<<
-        searchTitle: {
-            section: 'settings',
-            hidden: content => content.customMenu,
-            type: 'Title',
-            label: {
-                en: 'Search',
-            },
-            editorOnly: true,
-        },
         showSearch: {
             label: { en: 'Search' },
             type: 'OnOff',
@@ -896,6 +1067,9 @@ export default {
             bindingValidation: {
                 type: 'boolean',
                 tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Enable search functionality to filter options.',
             },
             /* wwEditor:end */
             section: 'settings',
@@ -943,7 +1117,11 @@ export default {
             responsive: true,
             /* wwEditor:start */
             bindingValidation: {
-                validations: [{ type: 'boolean' }],
+                type: 'boolean',
+                tooltip:
+                    'Whether the search input should be focused when the dropdown is opened. A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
                 tooltip: 'Whether the search input should be focused when the dropdown is opened.',
             },
             /* wwEditor:end */
@@ -978,6 +1156,15 @@ export default {
             states: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value representing the field name for form submission.',
+            },
+            propertyHelp: {
+                tooltip: 'The name of the field when used in a form submission.',
+            },
+            /* wwEditor:end */
             hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
         },
         customValidation: {
@@ -988,6 +1175,15 @@ export default {
             states: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Enable custom validation rules for this form field.',
+            },
+            /* wwEditor:end */
             hidden: (_, sidePanelContent) => !sidePanelContent.form?.uid,
         },
         validation: {
@@ -1002,13 +1198,8 @@ export default {
         },
 
         /* ------------------------------------
-                SELECTED STYLES
-            ------------------------------------- */
-        selectedTitle: {
-            type: 'Title',
-            label: { en: 'Selected' },
-            hidden: content => content.selectType !== 'single',
-        },
+            SELECTED STYLES
+        ------------------------------------- */
         selectedFontFamily: {
             label: {
                 en: 'Font family',
@@ -1019,6 +1210,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value representing the font family: "Arial", "Helvetica", etc.',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedFontSize: {
@@ -1036,6 +1233,12 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: '14px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A length value: "14px", "1rem", "100%", etc.',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedFontWeight: {
@@ -1063,6 +1266,12 @@ export default {
                 ],
             },
             defaultValue: null,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number value representing font weight: 100, 200, 300, 400, 500, 600, 700, 800, 900',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedFontColor: {
@@ -1075,6 +1284,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A color value: "#333", "rgb(255, 0, 0)", "red", etc.',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
         selectedTextAlign: {
@@ -1092,16 +1307,18 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: 'left',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value: "left", "center", or "right"',
+            },
+            /* wwEditor:end */
             hidden: content => content.selectType !== 'single',
         },
 
         /* ------------------------------------
-                PLACEHOLDER STYLES
-            ------------------------------------- */
-        placeholderTitle: {
-            type: 'Title',
-            label: { en: 'Placeholder' },
-        },
+            PLACEHOLDER STYLES
+        ------------------------------------- */
         placeholderFontFamily: {
             label: {
                 en: 'Font family',
@@ -1112,6 +1329,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string value representing the font family: "Arial", "Helvetica", etc.',
+            },
+            /* wwEditor:end */
         },
         placeholderFontSize: {
             type: 'Length',
@@ -1128,6 +1351,12 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: '14px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A length value: "14px", "1rem", "100%", etc.',
+            },
+            /* wwEditor:end */
         },
         placeholderFontWeight: {
             label: {
@@ -1165,6 +1394,12 @@ export default {
             classes: true,
             bindable: true,
             responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A color value: "#333", "rgb(255, 0, 0)", "red", etc.',
+            },
+            /* wwEditor:end */
         },
         placeholderTextAlign: {
             label: { en: 'Text align' },
@@ -1185,16 +1420,8 @@ export default {
         },
 
         /* ------------------------------------
-                CHIP STYLES
-            ------------------------------------- */
-        chipStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Chip',
-            },
-            editorOnly: true,
-            hidden: content => content.selectType == 'single',
-        },
+            CHIP STYLES
+        ------------------------------------- */
         chipFontFamily: {
             label: {
                 en: 'Font family',
@@ -1452,17 +1679,54 @@ export default {
             /* wwEditor:end */
             hidden: content => content.selectType == 'single',
         },
+        chipImageSize: {
+            type: 'Length',
+            label: {
+                en: 'Image size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '14px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the image size in chips: `14`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType == 'single' || content.optionType !== 'imageText',
+        },
+        chipImageRadius: {
+            type: 'Spacing',
+            label: {
+                en: 'Image radius',
+            },
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                ],
+                isCorner: true,
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '4px',
+            hidden: content => content.selectType == 'single' || content.optionType !== 'imageText',
+        },
 
         /* ------------------------------------
-                TRIGGER STYLES
-            ------------------------------------- */
-        triggerStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Trigger',
-            },
-            editorOnly: true,
-        },
+            TRIGGER STYLES
+        ------------------------------------- */
         // triggerWidth: {
         //     type: 'Length',
         //     label: {
@@ -1737,17 +2001,54 @@ export default {
             },
             /* wwEditor:end */
         },
+        triggerImageSize: {
+            type: 'Length',
+            label: {
+                en: 'Image size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '16px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the image size in trigger: `16`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.selectType === 'multiple' || content.optionType !== 'imageText',
+        },
+        triggerImageRadius: {
+            type: 'Spacing',
+            label: {
+                en: 'Image radius',
+            },
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                ],
+                isCorner: true,
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '4px',
+            hidden: content => content.selectType === 'multiple' || content.optionType !== 'imageText',
+        },
 
         /* ------------------------------------
-                DROPDOWN STYLES
-            ------------------------------------- */
-        dropdownStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Dropdown',
-            },
-            editorOnly: true,
-        },
+            DROPDOWN STYLES
+        ------------------------------------- */
         dropdownWidth: {
             type: 'Length',
             label: {
@@ -1788,6 +2089,19 @@ export default {
             bindable: true,
             responsive: true,
             bindable: true,
+        },
+        noMaxHeightInfobox: {
+            type: 'InfoBox',
+            editorOnly: true,
+            options: content => ({
+                variant: 'warning',
+                icon: 'warning',
+                title: 'Many options detected',
+                content: `You have ${
+                    content.choices?.length || 0
+                } options and no max-height has been set. A default max-height of 500px has been applied to the dropdown to prevent performance issues.`,
+            }),
+            hidden: content => !!content.dropdownMaxHeight || !content.choices?.length || content.choices.length <= 100,
         },
         dropdownBorder: {
             type: 'TextRadioGroup',
@@ -1927,15 +2241,8 @@ export default {
         },
 
         /* ------------------------------------
-                OPTION STYLES
-            ------------------------------------- */
-        optionStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Option',
-            },
-            editorOnly: true,
-        },
+            OPTION STYLES
+        ------------------------------------- */
         optionFontFamily: {
             label: {
                 en: 'Font family',
@@ -2189,17 +2496,54 @@ export default {
             },
             /* wwEditor:end */
         },
+        optionImageSize: {
+            type: 'Length',
+            label: {
+                en: 'Image size',
+            },
+            options: {
+                unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '16px',
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'number',
+                tooltip: 'A number that defines the image size in options: `16`',
+            },
+            /* wwEditor:end */
+            hidden: content => content.optionType !== 'imageText',
+        },
+        optionImageRadius: {
+            type: 'Spacing',
+            label: {
+                en: 'Image radius',
+            },
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                ],
+                isCorner: true,
+                noRange: true,
+                useVar: true,
+            },
+            bindable: true,
+            responsive: true,
+            states: true,
+            classes: true,
+            defaultValue: '4px',
+            hidden: content => content.optionType !== 'imageText',
+        },
 
         /* ------------------------------------
-                EMPTY STYLES
-            ------------------------------------- */
-        emptyStateStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Empty state',
-            },
-            editorOnly: true,
-        },
+            EMPTY STYLES
+        ------------------------------------- */
         emptyStateFontFamily: {
             label: {
                 en: 'Font family',
@@ -2293,16 +2637,8 @@ export default {
         },
 
         /* ------------------------------------
-                SEARCH STYLES
-            ------------------------------------- */
-        searchStylesTitle: {
-            type: 'Title',
-            label: {
-                en: 'Search',
-            },
-            editorOnly: true,
-            hidden: content => !content.showSearch,
-        },
+            SEARCH STYLES
+        ------------------------------------- */
         searchWidth: {
             type: 'Length',
             label: {

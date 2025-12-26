@@ -119,7 +119,7 @@ export default {
 
         const selectType = computed(() => props.content.selectType);
         const initValue = computed(() =>
-            selectType.value === 'single' ? (props.content.initValueSingle ?? null) : props.content.initValueMulti || []
+            selectType.value === 'single' ? props.content.initValueSingle ?? null : props.content.initValueMulti || []
         );
         const { value: variableValue, setValue } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
@@ -150,7 +150,10 @@ export default {
         const isReallyFocused = ref(false);
         const isSearchBarFocused = ref(false);
         const isMouseDownOnOption = ref(false);
-        const rawData = computed(() => props.content.choices || []);
+        const rawData = computed(() => {
+            const choices = props.content.choices;
+            return Array.isArray(choices) ? choices : [];
+        });
 
         const isFocused = computed(() => {
             /* wwEditor:start */
@@ -181,7 +184,10 @@ export default {
         const triggerWidth = ref(0);
         const triggerHeight = ref(0);
         const shouldCloseDropdown = ref(true);
+        const optionType = computed(() => props.content.optionType || 'text');
         const mappingLabel = computed(() => props.content.mappingLabel);
+        const mappingIcon = computed(() => props.content.mappingIcon);
+        const mappingImage = computed(() => props.content.mappingImage);
         const mappingValue = computed(() => props.content.mappingValue);
         const mappingDisabled = computed(() => props.content.mappingDisabled);
         const showSearch = computed(() => props.content.showSearch);
@@ -190,13 +196,28 @@ export default {
         // Styles
         const syncFloating = () => {
             if (!triggerElement?.value) return;
-            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            const triggerRect = triggerElement.value.getBoundingClientRect();
+            const offsetY = parseInt(props.content.offsetY) || 0;
+            const offsetX = parseInt(props.content.offsetX) || 0;
+            const viewportHeight = wwLib.getFrontWindow()?.innerHeight || window.innerHeight;
+
+            let top = triggerRect.bottom + offsetY;
+
+            const actualDropdownHeight = dropdownElement.value?.getBoundingClientRect().height || 0;
+            const estimatedDropdownHeight = parseInt(props.content.dropdownMaxHeight) || 300;
+            const dropdownHeight = actualDropdownHeight > 50 ? actualDropdownHeight : estimatedDropdownHeight;
+
+            const spaceBelow = viewportHeight - triggerRect.bottom;
+            const spaceAbove = triggerRect.top;
+
+            if (dropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
+                top = triggerRect.top - dropdownHeight - offsetY;
+            }
+
             floatingStyles.value = {
                 position: 'absolute',
-                top: `${
-                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
-                }px`,
-                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+                top: `${top}px`,
+                left: `${triggerRect.left + offsetX}px`,
             };
         };
         let floatingStyles = ref({});
@@ -221,14 +242,18 @@ export default {
                       'border-left': props.content.dropdownBorderLeft,
                   };
 
+            // Use default max-height of 500px if not defined, required for virtual scrolling
+            const maxHeight = props.content.dropdownMaxHeight || '500px';
+
             return {
                 width: props.content.dropdownWidth,
-                'max-height': props.content.dropdownMaxHeight,
+                'max-height': maxHeight,
                 'border-radius': props.content.dropdownBorderRadius,
                 padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
                 'box-shadow': props.content.dropdownShadows,
-                overflow: 'auto',
+                display: 'flex',
+                'flex-direction': 'column',
                 ...dropdownBorderCss,
             };
         });
@@ -293,12 +318,15 @@ export default {
             if (value === '' || value == null || value === undefined) {
                 return;
             }
-            
+
             const option = Array.from(optionsMap.value).find(([key, option]) => option.value === value);
             if (!option && !options?.length > 1) return;
             if (option?.[1]?.disabled) return;
 
-            const originalValue = selectType.value === 'single' ? variableValue.value : [...(Array.isArray(variableValue.value) ? variableValue.value : [])];
+            const originalValue =
+                selectType.value === 'single'
+                    ? variableValue.value
+                    : [...(Array.isArray(variableValue.value) ? variableValue.value : [])];
             let valueChanged = false;
             let eventValue;
 
@@ -384,7 +412,7 @@ export default {
             }
 
             emit('trigger-event', { name: 'change', event: { value: currentValue } });
-            
+
             // Close dropdown if closeOnSelect is enabled, just like regular selection
             if (props.content.closeOnSelect) {
                 // Re-enable closing first, then close
@@ -409,21 +437,31 @@ export default {
             updateSearch,
         });
 
-
         function openDropdown() {
             if (isDisabled.value || isReadonly.value) return;
-            const triggerElementBounding = triggerElement.value.getBoundingClientRect();
+            if (!triggerElement?.value) return;
+
+            const triggerRect = triggerElement.value.getBoundingClientRect();
+            const offsetY = parseInt(props.content.offsetY) || 0;
+            const offsetX = parseInt(props.content.offsetX) || 0;
+
+            // Initial positioning: always below the trigger
+            // syncFloating() will adjust with actual dropdown height after render
             floatingStyles.value = {
                 position: 'absolute',
-                top: `${
-                    triggerElementBounding.top + triggerElementBounding.height + parseInt(props.content.offsetY)
-                }px`,
-                left: `${triggerElementBounding.left + parseInt(props.content.offsetX)}px`,
+                top: `${triggerRect.bottom + offsetY}px`,
+                left: `${triggerRect.left + offsetX}px`,
             };
 
             isOpen.value = true;
-            nextTick(syncFloating);
-            if (autoFocusSearch.value) focusSearch();
+
+            nextTick(() => {
+                // Wait for browser to complete layout calculations
+                requestAnimationFrame(() => {
+                    syncFloating();
+                    if (autoFocusSearch.value) focusSearch();
+                });
+            });
         }
 
         function closeDropdown() {
@@ -514,8 +552,9 @@ export default {
         };
 
         const selectionDetails = computed(() => {
+            const dataArray = Array.isArray(rawData.value) ? rawData.value : [];
             const _optionsMap = new Map(
-                rawData.value.map(option => {
+                dataArray.map(option => {
                     // Handle primitive values (strings, numbers) vs objects
                     const isPrimitive = typeof option !== 'object' || option === null;
 
@@ -543,14 +582,42 @@ export default {
                     return {
                         value: opt,
                         label: opt,
+                        icon: null,
+                        image: null,
                         disabled: false,
                         data: opt,
                     };
                 } else {
                     // For objects, use the mapping formulas
+                    const computedValue = resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value ?? opt;
+                    if (optionType.value === 'iconText') {
+                        return {
+                            value: computedValue,
+                            label:
+                                (resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.label ?? opt.text ?? '') ||
+                                '',
+                            icon: resolveMappingFormula(toValue(mappingIcon), opt) ?? opt.icon ?? null,
+                            image: null,
+                            disabled: opt.disabled || false,
+                            data: opt || {},
+                        };
+                    } else if (optionType.value === 'imageText') {
+                        return {
+                            value: computedValue,
+                            label:
+                                (resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.label ?? opt.text ?? '') ||
+                                '',
+                            icon: null,
+                            image: resolveMappingFormula(toValue(mappingImage), opt) ?? opt.image ?? null,
+                            disabled: opt.disabled || false,
+                            data: opt || {},
+                        };
+                    }
                     return {
-                        value: resolveMappingFormula(toValue(mappingValue), opt) ?? opt.value ?? opt,
+                        value: computedValue,
                         label: resolveMappingFormula(toValue(mappingLabel), opt) ?? opt.label ?? opt.value ?? opt,
+                        icon: null,
+                        image: null,
                         disabled: opt.disabled || false,
                         data: opt || {},
                     };
@@ -622,12 +689,20 @@ export default {
         wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 
         const preventDefault = e => {
+            // Allow scrolling inside the dropdown element
+            if (dropdownElement.value && dropdownElement.value.contains(e.target)) {
+                return;
+            }
             e.preventDefault();
         };
 
         const preventDefaultForScrollKeys = e => {
             const keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
             if (keys[e.keyCode]) {
+                // Allow scrolling inside the dropdown element
+                if (dropdownElement.value && dropdownElement.value.contains(document.activeElement)) {
+                    return;
+                }
                 preventDefault(e);
                 return false;
             }
@@ -704,13 +779,17 @@ export default {
             }
         });
 
-        watch(isAnySelectElementFocused, (value) => {
-            if (value) {
-                emit('add-state', 'focus');
-            } else {
-                emit('remove-state', 'focus');
-            }
-        }, { immediate: true });
+        watch(
+            isAnySelectElementFocused,
+            value => {
+                if (value) {
+                    emit('add-state', 'focus');
+                } else {
+                    emit('remove-state', 'focus');
+                }
+            },
+            { immediate: true }
+        );
 
         watch(isOpen, () => {
             nextTick(syncFloating);
@@ -842,7 +921,10 @@ export default {
         const registerTriggerLocalContext = registerLocalContext('selectTrigger');
         const registerSelectLocalContext = registerLocalContext('select');
 
+        provide('_wwSelect:optionType', optionType);
         provide('_wwSelect:mappingLabel', mappingLabel);
+        provide('_wwSelect:mappingIcon', mappingIcon);
+        provide('_wwSelect:mappingImage', mappingImage);
         provide('_wwSelect:mappingValue', mappingValue);
         provide('_wwSelect:mappingDisabled', mappingDisabled);
         provide('_wwSelect:rawData', rawData);
@@ -862,7 +944,13 @@ export default {
         provide('_wwSelect:registerOptionProperties', registerOptionProperties);
         provide('_wwSelect:registerTriggerLocalContext', registerTriggerLocalContext);
         provide('_wwSelect:dropdownMethods', { closeDropdown });
-        provide('_wwSelect:useSearch', { updateHasSearch, updateSearchElement, updateSearch, updateAutoFocusSearch, isSearchBarFocused });
+        provide('_wwSelect:useSearch', {
+            updateHasSearch,
+            updateSearchElement,
+            updateSearch,
+            updateAutoFocusSearch,
+            isSearchBarFocused,
+        });
         provide('_wwSelect:isMouseDownOnOption', isMouseDownOnOption);
         provide('_wwSelect:localContext', currentLocalContext);
 
@@ -908,6 +996,7 @@ export default {
             });
             wwLib.getFrontDocument().addEventListener('click', handleClickOutside);
             wwLib.getFrontWindow().addEventListener('scroll', syncFloating);
+            wwLib.getFrontWindow().addEventListener('resize', syncFloating);
         });
 
         onBeforeUnmount(() => {
@@ -917,6 +1006,8 @@ export default {
             }
             revertBlockScrolling();
             wwLib.getFrontDocument().removeEventListener('click', handleClickOutside);
+            wwLib.getFrontWindow().removeEventListener('scroll', syncFloating);
+            wwLib.getFrontWindow().removeEventListener('resize', syncFloating);
         });
 
         watch(

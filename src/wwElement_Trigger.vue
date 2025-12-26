@@ -2,8 +2,10 @@
     <div class="ww-input-select__trigger">
         <!-- SINGLE SELECT -->
         <div v-if="isSingleSelect" :style="triggerStyle">
-            <div v-if="isOptionSelected" class="selected-value-container">
-                <span v-if="prefixText" :style="prefixStyle">{{ prefixText }}: </span>
+            <div v-if="isOptionSelected" class="ww-input-select__selected">
+                <div v-if="selectedIconHtml" v-html="selectedIconHtml" :style="selectedMediaIconStyle"
+                    aria-hidden="true"></div>
+                <img v-else-if="selectedImageUrl" :src="selectedImageUrl" :style="selectedMediaImageStyle" alt="" />
                 <span :style="selectedValueStyle">{{ selectedLabel }}</span>
             </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
@@ -12,8 +14,11 @@
         <!-- MULTI SELECT -->
         <div v-else :style="triggerStyle">
             <div v-if="isOptionSelected" class="ww-input-select__chip_container">
-                <div class="ww-input-select__chip" v-for="option in localContext?.data?.select?.active?.details"
-                    :key="option.value" @click="e => handleChipClick(e, option.value)" :style="chipStyle">
+                <div class="ww-input-select__chip" v-for="option in selectedChips" :key="option.value"
+                    @click="e => handleChipClick(e, option.value)" :style="chipStyle">
+                    <div v-if="option.iconHtml" v-html="option.iconHtml" :style="chipMediaIconStyle" aria-hidden="true">
+                    </div>
+                    <img v-else-if="option.imageUrl" :src="option.imageUrl" :style="chipMediaImageStyle" alt="" />
                     <span>{{ option.label }}</span>
                     <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
                 </div>
@@ -21,7 +26,6 @@
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
             <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
         </div>
-        <!-- <wwElement class="ww-select-trigger" v-bind="content.triggerContainer" /> -->
     </div>
 </template>
 
@@ -48,6 +52,7 @@ export default {
 
         const registerTriggerLocalContext = inject('_wwSelect:registerTriggerLocalContext');
         const localContext = inject('_wwSelect:localContext');
+        const optionType = inject('_wwSelect:optionType', ref('text'));
 
         const isSingleSelect = computed(() => props.content.selectType === 'single');
 
@@ -55,6 +60,31 @@ export default {
         const selectedLabel = computed(() => {
             return localContext.value?.data?.select?.active?.details?.label;
         });
+        const selectedIconCode = computed(() => {
+            if (optionType.value !== 'iconText') return null;
+            return localContext.value?.data?.select?.active?.details?.icon || null;
+        });
+        const selectedImageUrl = computed(() => {
+            if (optionType.value !== 'imageText') return null;
+            const url = localContext.value?.data?.select?.active?.details?.image || null;
+            if (!url) return null;
+            try {
+                const str = String(url);
+                if (str.startsWith('designs/')) return `${wwLib.wwUtils.getCdnPrefix()}${str}`;
+                return str;
+            } catch (e) {
+                return null;
+            }
+        });
+        const selectedIconHtml = ref(null);
+        watch(
+            selectedIconCode,
+            async code => {
+                if (code) selectedIconHtml.value = (await getIcon(code)) || null;
+                else selectedIconHtml.value = null;
+            },
+            { immediate: true }
+        );
 
         // Add computed property for the prefix text
         const prefixText = computed(() => {
@@ -66,6 +96,46 @@ export default {
                 !!localContext.value?.data?.select?.active?.details?.label ||
                 localContext.value?.data?.select?.active?.details?.length > 0
         );
+
+        const selectedDetails = computed(() => {
+            const details = localContext.value?.data?.select?.active?.details;
+            return Array.isArray(details) ? details : [];
+        });
+
+        const selectedChips = ref([]);
+
+        watch(
+            [selectedDetails, optionType],
+            async ([details]) => {
+                const enriched = [];
+                for (const d of details) {
+                    let iconHtml = null;
+                    let imageUrl = null;
+
+                    if (optionType.value === 'iconText' && d?.icon) {
+                        try {
+                            iconHtml = (await getIcon(d.icon)) || null;
+                        } catch (e) {
+                            iconHtml = null;
+                        }
+                    }
+
+                    if (optionType.value === 'imageText' && d?.image) {
+                        try {
+                            const str = String(d.image);
+                            imageUrl = str.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${str}` : str;
+                        } catch (e) {
+                            imageUrl = null;
+                        }
+                    }
+
+                    enriched.push({ ...d, iconHtml, imageUrl });
+                }
+                selectedChips.value = enriched;
+            },
+            { immediate: true, deep: true }
+        );
+
         const isOpen = computed(() => localContext.value?.data?.select?.utils?.isOpen);
         const data = ref({
             placeholder,
@@ -117,6 +187,27 @@ export default {
                 'justify-content': 'center',
                 'pointer-events': 'none',
                 'margin-left': '6px',
+            };
+        });
+
+        const selectedMediaIconStyle = computed(() => {
+            return {
+                width: props.content.triggerIconSize,
+                color: props.content.selectedFontColor,
+                display: 'flex',
+                'align-items': 'center',
+                'justify-content': 'center',
+                'pointer-events': 'none',
+                'margin-right': '8px',
+            };
+        });
+        const selectedMediaImageStyle = computed(() => {
+            return {
+                width: props.content.triggerImageSize || props.content.triggerIconSize,
+                height: props.content.triggerImageSize || props.content.triggerIconSize,
+                'object-fit': 'cover',
+                'border-radius': props.content.triggerImageRadius || '4px',
+                'margin-right': '8px',
             };
         });
 
@@ -217,6 +308,22 @@ export default {
             };
         });
 
+        const chipMediaIconStyle = computed(() => ({
+            width: props.content.chipIconSize,
+            color: props.content.chipFontColor,
+            display: 'flex',
+            'align-items': 'center',
+            'justify-content': 'center',
+            'pointer-events': 'none',
+        }));
+        const chipMediaImageStyle = computed(() => ({
+            width: props.content.chipImageSize || props.content.chipIconSize,
+            height: props.content.chipImageSize || props.content.chipIconSize,
+            'object-fit': 'cover',
+            'border-radius': props.content.chipImageRadius || '4px',
+        }));
+        const chipIconFromOption = iconCode => (iconCode ? getIcon(iconCode) : null);
+
         const handleChipClick = (event, value) => {
             event.stopPropagation();
             emit('remove-multiselect-value', value);
@@ -226,9 +333,14 @@ export default {
             isSingleSelect,
             data,
             selectedLabel,
+            selectedIconHtml,
+            selectedMediaIconStyle,
+            selectedMediaImageStyle,
+            selectedImageUrl,
             prefixText,
             isOptionSelected,
             localContext,
+            selectedChips,
             triggerStyle,
             triggerIconStyle,
             selectedValueStyle,
@@ -238,6 +350,9 @@ export default {
             chipStyle,
             chipIconStyle,
             chipIconUnselect,
+            chipMediaIconStyle,
+            chipMediaImageStyle,
+            chipIconFromOption,
             isOpen,
             handleChipClick,
         };
@@ -252,6 +367,28 @@ export default {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+
+    .ww-input-select__selected {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        min-width: 0;
+
+        &>div,
+        &>img {
+            flex-shrink: 0;
+        }
+
+        &>span {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
 
     .selected-value-container {
         display: flex;
