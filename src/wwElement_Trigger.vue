@@ -6,8 +6,8 @@
                 <div v-if="selectedIconHtml" v-html="selectedIconHtml" :style="selectedMediaIconStyle"
                     aria-hidden="true"></div>
                 <img v-else-if="selectedImageUrl" :src="selectedImageUrl" :style="selectedMediaImageStyle" alt="" />
-                <span v-if="prefixText" :style="prefixStyle">{{ prefixText }}: </span>
-                <span :style="selectedValueStyle">{{ selectedLabel }}</span>
+                <span v-if="prefixText" class="prefix" :style="prefixStyle">{{ prefixText }}: </span>
+                <span class="selected-value" :style="selectedValueStyle">{{ selectedLabel }}</span>
             </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
             <div v-html="chipIcon" :style="triggerIconStyle" aria-hidden="true"></div>
@@ -374,7 +374,7 @@ export default {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 8px;
+        //gap: 8px;
         flex: 1;
         min-width: 0;
 
@@ -383,7 +383,7 @@ export default {
             flex-shrink: 0;
         }
 
-        &>span {
+        &>span.selected-value {
             flex: 1;
             min-width: 0;
             overflow: hidden;
