@@ -6,6 +6,7 @@
                 <div v-if="selectedIconHtml" v-html="selectedIconHtml" :style="selectedMediaIconStyle"
                     aria-hidden="true"></div>
                 <img v-else-if="selectedImageUrl" :src="selectedImageUrl" :style="selectedMediaImageStyle" alt="" />
+                <span v-if="prefixText" :style="prefixStyle">{{ prefixText }}: </span>
                 <span :style="selectedValueStyle">{{ selectedLabel }}</span>
             </div>
             <span v-else :style="placeholderStyle">{{ data.placeholder }}</span>
@@ -88,7 +89,8 @@ export default {
 
         // Add computed property for the prefix text
         const prefixText = computed(() => {
-            return props.content.selectedPrefix?.trim() || '';
+            const prefix = props.content.selectedPrefix?.trim();
+            return prefix || null;
         });
 
         const isOptionSelected = computed(
