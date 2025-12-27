@@ -184,8 +184,6 @@ export default {
             'mappingDisabled',
             'initValueSingle',
             'initValueMulti',
-            'selectedPrefix',
-            'selectedPrefixColor',
             'allowScrollingWhenOpen',
             {
                 label: 'Trigger',
@@ -197,6 +195,8 @@ export default {
                     'initialState',
                     'selectType',
                     'selectTypeWarning',
+                    'selectedPrefix',
+                    'selectedPrefixColor',
                 ],
             },
             {
