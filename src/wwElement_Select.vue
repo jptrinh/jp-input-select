@@ -501,10 +501,17 @@ export default {
             isReallyFocused.value = true;
         }
 
-        function handleBlur() {
-            // Don't blur if we're clicking on an option
+        function handleFocusLeave(relatedTarget) {
+            if (!isOpen.value) return;
+            if (triggerElement.value?.contains(relatedTarget)) return;
+            if (dropdownElement.value?.contains(relatedTarget)) return;
+            closeDropdown();
+        }
+
+        function handleBlur(event) {
             if (!isMouseDownOnOption.value) {
                 isReallyFocused.value = false;
+                handleFocusLeave(event.relatedTarget);
             }
         }
 
@@ -950,6 +957,8 @@ export default {
             updateSearch,
             updateAutoFocusSearch,
             isSearchBarFocused,
+            handleKeydown,
+            handleFocusLeave,
         });
         provide('_wwSelect:isMouseDownOnOption', isMouseDownOnOption);
         provide('_wwSelect:localContext', currentLocalContext);

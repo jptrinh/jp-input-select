@@ -73,6 +73,14 @@ export default function useAccessibility({
 
     const handleKeydown = event => {
         const keyHandlers = {
+            Tab: () => {
+                if (event.shiftKey && isOpen.value) {
+                    elementRef.value.tabIndex = -1;
+                    setTimeout(() => {
+                        if (elementRef.value) elementRef.value.tabIndex = 0;
+                    }, 0);
+                }
+            },
             ArrowDown: () => {
                 event.preventDefault();
                 !isOpen.value ? openDropdown() : navigateOptions(1);
@@ -81,9 +89,20 @@ export default function useAccessibility({
                 event.preventDefault();
                 !isOpen.value ? openDropdown() : navigateOptions(-1);
             },
+            ' ': () => {
+                if (!isOpen.value) {
+                    event.preventDefault();
+                    openDropdown();
+                }
+            },
             Enter: () => {
                 event.preventDefault();
-                if (isOpen.value && activeOptionValue.value != null && activeOptionValue.value !== undefined && activeOptionValue.value !== '') {
+                if (
+                    isOpen.value &&
+                    activeOptionValue.value != null &&
+                    activeOptionValue.value !== undefined &&
+                    activeOptionValue.value !== ''
+                ) {
                     toggleValue(activeOptionValue.value);
                 } else if (!isOpen.value) {
                     openDropdown();
