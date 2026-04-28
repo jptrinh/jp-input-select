@@ -36,6 +36,7 @@ export default {
             '_wwSelect:useSearch',
             {}
         );
+        const isMouseDownOnOption = inject('_wwSelect:isMouseDownOnOption', ref(false));
         const searchElementRef = ref(null);
         const searchElement = computed(() => searchElementRef.value);
         const searchBy = computed(() => {
@@ -95,7 +96,7 @@ export default {
 
         const handleSearchBlur = event => {
             isSearchBarFocused.value = false;
-            if (handleFocusLeave) handleFocusLeave(event.relatedTarget);
+            if (!isMouseDownOnOption.value && handleFocusLeave) handleFocusLeave(event.relatedTarget);
         };
 
         watch(searchElement, value => {
