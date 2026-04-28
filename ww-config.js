@@ -235,7 +235,7 @@ export default {
         displayAllowedValues: ['block'],
         //ignoredStyleProperties: ['border','borderRadius','background','outline'],
     },
-    states: ['focus', 'readonly'],
+    states: ['focus', 'focus-visible', 'readonly'],
     triggerEvents: [
         {
             name: 'change',

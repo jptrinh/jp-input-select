@@ -11,6 +11,7 @@
             ref="triggerElement"
             @click="toggleDropdown"
             @keydown="handleKeydown"
+            @pointerdown="handlePointerDown"
             @focus="handleFocus"
             @blur="handleBlur"
             role="combobox"
@@ -148,6 +149,8 @@ export default {
         const options = computed(() => Array.from(optionsMap.value.values()));
         const isOpen = ref(false);
         const isReallyFocused = ref(false);
+        const isFocusVisible = ref(false);
+        const hadPointerInteraction = ref(false);
         const isSearchBarFocused = ref(false);
         const isMouseDownOnOption = ref(false);
         const rawData = computed(() => {
@@ -497,9 +500,17 @@ export default {
             }
         }
 
+        function handlePointerDown() {
+            hadPointerInteraction.value = true;
+        }
+
         function handleFocus() {
             if (isDisabled.value || isReadonly.value) return;
             isReallyFocused.value = true;
+            if (!hadPointerInteraction.value) {
+                isFocusVisible.value = true;
+            }
+            hadPointerInteraction.value = false;
         }
 
         function handleFocusLeave(relatedTarget) {
@@ -512,6 +523,7 @@ export default {
         function handleBlur(event) {
             if (!isMouseDownOnOption.value) {
                 isReallyFocused.value = false;
+                isFocusVisible.value = false;
                 handleFocusLeave(event.relatedTarget);
             }
         }
@@ -799,6 +811,22 @@ export default {
             { immediate: true }
         );
 
+        watch(
+            isFocusVisible,
+            value => {
+                if (value) {
+                    emit('add-state', 'focus-visible');
+                } else {
+                    emit('remove-state', 'focus-visible');
+                }
+            },
+            { immediate: true }
+        );
+
+        watch(isMouseDownOnOption, newVal => {
+            if (newVal) hadPointerInteraction.value = true;
+        });
+
         watch(isOpen, () => {
             nextTick(syncFloating);
             handleInitialFocus();
@@ -1036,6 +1064,8 @@ export default {
             forceOpenInEditor,
             isOpen,
             isReallyFocused,
+            isFocusVisible,
+            hadPointerInteraction,
             isSearchBarFocused,
             isFocused,
             isAnySelectElementFocused,
@@ -1048,6 +1078,7 @@ export default {
             isDisabled,
             selectType,
             handleKeydown,
+            handlePointerDown,
             handleFocus,
             handleBlur,
             focusInput,
