@@ -169,6 +169,7 @@ export default {
                 height: props.content.triggerHeight,
                 'border-radius': props.content.triggerBorderRadius,
                 'box-shadow': props.content.triggerShadows,
+                outline: props.content.triggerOutline,
                 cursor: 'pointer',
 
                 display: 'flex',

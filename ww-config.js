@@ -78,6 +78,7 @@ export default {
                     'triggerShadows',
                     'triggerPadding',
                     'triggerMargin',
+                    'triggerOutline',
                     'triggerIconClose',
                     'triggerIconOpen',
                     'triggerIconSize',
@@ -1907,6 +1908,17 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: '0px',
+        },
+        triggerOutline: {
+            type: 'Border',
+            label: {
+                en: 'Outline',
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            defaultValue: undefined,
         },
         triggerIconOpen: {
             label: { en: 'Open icon', fr: 'Icône ouverte' },
