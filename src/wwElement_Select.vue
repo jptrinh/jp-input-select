@@ -470,6 +470,7 @@ export default {
             resetSearch();
             resetFocus();
             isOpen.value = false;
+            emit('trigger-event', { name: 'dropdownClose', event: null });
         }
 
         function toggleDropdown(event = null) {

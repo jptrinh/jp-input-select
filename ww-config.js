@@ -250,6 +250,7 @@ export default {
         },
         { name: 'focus', label: { en: 'On focus' }, event: { value: '' } },
         { name: 'blur', label: { en: 'On blur' }, event: { value: '' } },
+        { name: 'dropdownClose', label: { en: 'On dropdown close' }, event: null },
     ],
     actions: [
         {
