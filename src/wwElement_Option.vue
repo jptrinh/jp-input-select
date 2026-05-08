@@ -278,6 +278,7 @@ export default {
             if (isSelected.value && canInteract.value && props.content.unselectOnClick) {
                 unselect();
                 focusFromOptionId(null);
+                focusSelectElement();
             } else if (!isSelected.value && canInteract.value && props.content.selectOnClick) {
                 updateValue(value.value);
                 focusFromOptionId(optionId);
