@@ -104,6 +104,9 @@ export default function useAccessibility({
                     activeOptionValue.value !== ''
                 ) {
                     toggleValue(activeOptionValue.value);
+                    // Restore focus to trigger after selection so focus-visible state is preserved.
+                    // setTimeout(0) ensures this runs after any nextTick-scheduled option focus calls.
+                    setTimeout(() => focusSelectElement(), 0);
                 } else if (!isOpen.value) {
                     openDropdown();
                 }
