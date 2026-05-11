@@ -55,6 +55,7 @@
             :name="content.fieldName"
             :value="variableValue"
             :required="content.required"
+            :disabled="isDisabled"
             tabindex="-1"
             class="fake-input"
         />
@@ -818,6 +819,18 @@ export default {
                     emit('add-state', 'focus-visible');
                 } else {
                     emit('remove-state', 'focus-visible');
+                }
+            },
+            { immediate: true }
+        );
+
+        watch(
+            isDisabled,
+            value => {
+                if (value) {
+                    emit('add-state', 'disabled');
+                } else {
+                    emit('remove-state', 'disabled');
                 }
             },
             { immediate: true }
