@@ -3,8 +3,12 @@
         <!-- SINGLE SELECT -->
         <div v-if="isSingleSelect" :style="triggerStyle">
             <div v-if="isOptionSelected" class="ww-input-select__selected">
-                <div v-if="selectedIconHtml" v-html="selectedIconHtml" :style="selectedMediaIconStyle"
-                    aria-hidden="true"></div>
+                <div
+                    v-if="selectedIconHtml"
+                    v-html="selectedIconHtml"
+                    :style="selectedMediaIconStyle"
+                    aria-hidden="true"
+                ></div>
                 <img v-else-if="selectedImageUrl" :src="selectedImageUrl" :style="selectedMediaImageStyle" alt="" />
                 <span v-if="prefixText" class="prefix" :style="prefixStyle">{{ prefixText }}: </span>
                 <span class="selected-value" :style="selectedValueStyle">{{ selectedLabel }}</span>
@@ -15,10 +19,19 @@
         <!-- MULTI SELECT -->
         <div v-else :style="triggerStyle">
             <div v-if="isOptionSelected" class="ww-input-select__chip_container">
-                <div class="ww-input-select__chip" v-for="option in selectedChips" :key="option.value"
-                    @click="e => handleChipClick(e, option.value)" :style="chipStyle">
-                    <div v-if="option.iconHtml" v-html="option.iconHtml" :style="chipMediaIconStyle" aria-hidden="true">
-                    </div>
+                <div
+                    class="ww-input-select__chip"
+                    v-for="option in selectedChips"
+                    :key="option.value"
+                    @click="e => handleChipClick(e, option.value)"
+                    :style="chipStyle"
+                >
+                    <div
+                        v-if="option.iconHtml"
+                        v-html="option.iconHtml"
+                        :style="chipMediaIconStyle"
+                        aria-hidden="true"
+                    ></div>
                     <img v-else-if="option.imageUrl" :src="option.imageUrl" :style="chipMediaImageStyle" alt="" />
                     <span>{{ option.label }}</span>
                     <div v-html="chipIconUnselect" :style="chipIconStyle" aria-hidden="true"></div>
@@ -152,14 +165,14 @@ export default {
         const triggerStyle = computed(() => {
             const borderCss = !props.content.triggerBorder
                 ? {
-                    border: props.content.triggerBorderAll,
-                }
+                      border: props.content.triggerBorderAll,
+                  }
                 : {
-                    'border-top': props.content.triggerBorderTop,
-                    'border-right': props.content.triggerBorderRight,
-                    'border-bottom': props.content.triggerBorderBottom,
-                    'border-left': props.content.triggerBorderLeft,
-                };
+                      'border-top': props.content.triggerBorderTop,
+                      'border-right': props.content.triggerBorderRight,
+                      'border-bottom': props.content.triggerBorderBottom,
+                      'border-left': props.content.triggerBorderLeft,
+                  };
 
             return {
                 padding: props.content.triggerPadding,
@@ -249,14 +262,14 @@ export default {
         const chipStyle = computed(() => {
             const borderCss = !props.content.chipBorder
                 ? {
-                    border: props.content.chipBorderAll,
-                }
+                      border: props.content.chipBorderAll,
+                  }
                 : {
-                    'border-top': props.content.chipBorderTop,
-                    'border-right': props.content.chipBorderRight,
-                    'border-bottom': props.content.chipBorderBottom,
-                    'border-left': props.content.chipBorderLeft,
-                };
+                      'border-top': props.content.chipBorderTop,
+                      'border-right': props.content.chipBorderRight,
+                      'border-bottom': props.content.chipBorderBottom,
+                      'border-left': props.content.chipBorderLeft,
+                  };
 
             return {
                 'font-size': props.content.chipFontSize,
@@ -371,6 +384,14 @@ export default {
     justify-content: space-between;
     width: 100%;
 
+    & > div > span {
+        display: -webkit-box;
+        line-clamp: 1;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+    }
+
     .ww-input-select__selected {
         display: flex;
         flex-direction: row;
@@ -379,12 +400,12 @@ export default {
         flex: 1;
         min-width: 0;
 
-        &>div,
-        &>img {
+        & > div,
+        & > img {
             flex-shrink: 0;
         }
 
-        &>span.selected-value {
+        & > span.selected-value {
             flex: 1;
             min-width: 0;
             overflow: hidden;
