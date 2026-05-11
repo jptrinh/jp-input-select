@@ -2248,7 +2248,7 @@ export default {
         dropdownBorderRadius: {
             type: 'Spacing',
             label: {
-                en: 'Border Border radius',
+                en: 'Border radius',
             },
             options: {
                 unitChoices: [{ value: 'px', label: 'px', min: 1, max: 500 }],
@@ -2264,7 +2264,7 @@ export default {
         },
         dropdownBgColor: {
             label: {
-                en: 'Border Dropdown background color',
+                en: 'Dropdown background color',
             },
             type: 'Color',
             defaultValue: '#FFFFFF',
@@ -2384,7 +2384,7 @@ export default {
         optionPadding: {
             type: 'Spacing',
             label: {
-                en: 'padding',
+                en: 'Padding',
             },
             defaultValue: '8px',
             states: true,
@@ -2422,7 +2422,7 @@ export default {
         },
         optionBgColor: {
             label: {
-                en: 'background color',
+                en: 'Background color',
             },
             type: 'Color',
             defaultValue: undefined,
@@ -2456,7 +2456,7 @@ export default {
             defaultValue: '#f5f5f5',
         },
         optionCursor: {
-            label: { en: 'cursor' },
+            label: { en: 'Cursor' },
             type: 'TextSelect',
             options: {
                 options: [
