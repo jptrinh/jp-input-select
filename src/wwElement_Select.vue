@@ -189,6 +189,7 @@ export default {
         const resizeObserver = ref(null);
         const triggerWidth = ref(0);
         const triggerHeight = ref(0);
+        const dropdownAvailableHeight = ref(0);
         const shouldCloseDropdown = ref(true);
         const optionType = computed(() => props.content.optionType || 'text');
         const mappingLabel = computed(() => props.content.mappingLabel);
@@ -215,10 +216,13 @@ export default {
 
             const spaceBelow = viewportHeight - triggerRect.bottom;
             const spaceAbove = triggerRect.top;
+            const opensUpward = dropdownHeight > spaceBelow && spaceAbove > spaceBelow;
 
-            if (dropdownHeight > spaceBelow && spaceAbove > spaceBelow) {
+            if (opensUpward) {
                 top = triggerRect.top - dropdownHeight - offsetY;
             }
+
+            dropdownAvailableHeight.value = Math.max(0, (opensUpward ? spaceAbove : spaceBelow) - 8);
 
             floatingStyles.value = {
                 position: 'absolute',
@@ -685,7 +689,7 @@ export default {
         const data = ref({
             options: _options,
             active: { value: variableValue, details: selectionDetails },
-            utils: { type: selectType, isOpen, triggerWidth, triggerHeight },
+            utils: { type: selectType, isOpen, triggerWidth, triggerHeight, dropdownAvailableHeight },
         });
 
         let initialOverflow = null;
@@ -1042,6 +1046,7 @@ export default {
             - \`isOpen\`: Boolean indicating if dropdown is open
             - \`triggerWidth\`: Width of trigger element
             - \`triggerHeight\`: Height of trigger element
+            - \`dropdownAvailableHeight\`: Available viewport height (px) for the dropdown in the direction it opens
 
             #### search (optional)
             Present when search is enabled:
