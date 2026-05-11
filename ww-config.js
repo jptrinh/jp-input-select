@@ -128,6 +128,8 @@ export default {
                     'optionBgColor',
                     'optionBgColorFocused',
                     'optionBgColorHover',
+                    'optionFontColorFocused',
+                    'optionFontColorHover',
                     'optionCursor',
                     'optionIcon',
                     'optionIconSize',
@@ -2454,6 +2456,28 @@ export default {
             bindable: true,
             responsive: true,
             defaultValue: '#f5f5f5',
+        },
+        optionFontColorFocused: {
+            label: {
+                en: 'Focus text color',
+            },
+            type: 'Color',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+        },
+        optionFontColorHover: {
+            label: {
+                en: 'Hover text color',
+            },
+            type: 'Color',
+            defaultValue: undefined,
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
         },
         optionCursor: {
             label: { en: 'Cursor' },

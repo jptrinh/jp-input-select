@@ -97,6 +97,8 @@ export default {
                 border: props.content.optionBorder,
                 '--ww-select-option-bg-color-hover': props.content.optionBgColorHover,
                 '--ww-select-option-bg-color-focused': props.content.optionBgColorFocused,
+                '--ww-select-option-font-color-hover': props.content.optionFontColorHover,
+                '--ww-select-option-font-color-focused': props.content.optionFontColorFocused,
             };
         });
 
@@ -412,11 +414,14 @@ export default {
     justify-content: space-between;
     align-items: center;
     gap: 8px;
+    user-select: none;
     &:hover {
         background-color: var(--ww-select-option-bg-color-hover) !important;
+        color: var(--ww-select-option-font-color-hover) !important;
     }
     &.focused {
         background-color: var(--ww-select-option-bg-color-focused) !important;
+        color: var(--ww-select-option-font-color-focused) !important;
     }
     &.disabled {
         cursor: not-allowed;

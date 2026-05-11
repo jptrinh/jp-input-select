@@ -390,6 +390,7 @@ export default {
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
         overflow: hidden;
+        user-select: none;
     }
 
     .ww-input-select__selected {
@@ -411,6 +412,7 @@ export default {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            user-select: none;
         }
     }
 
