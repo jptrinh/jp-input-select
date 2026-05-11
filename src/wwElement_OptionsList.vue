@@ -243,3 +243,14 @@ export default {
 <style>
 @import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 </style>
+
+<style scoped>
+.scroller {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+</style>
