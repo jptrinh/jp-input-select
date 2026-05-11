@@ -253,6 +253,7 @@ export default {
 
             return {
                 width: props.content.dropdownWidth,
+                'min-width': props.content.dropdownMinWidth,
                 'max-height': maxHeight,
                 'border-radius': props.content.dropdownBorderRadius,
                 padding: props.content.dropdownPadding,

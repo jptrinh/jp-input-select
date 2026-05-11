@@ -97,6 +97,7 @@ export default {
                     'offsetY',
                     'boundOffset',
                     'dropdownWidth',
+                    'dropdownMinWidth',
                     'dropdownMaxHeight',
                     'noMaxHeightInfobox',
                     'dropdownBorder',
@@ -2100,6 +2101,34 @@ export default {
                 __wwtype: 'f',
                 code: `context.local.data?.['select']?.['select']?.['utils']?.['triggerWidth']+'px'`,
             },
+        },
+        dropdownMinWidth: {
+            type: 'Length',
+            label: {
+                en: 'Min-width',
+            },
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 1, max: 500 },
+                    { value: '%', label: '%', min: 1, max: 100 },
+                    { value: 'rem', label: 'rem', min: 0, max: 500 },
+                ],
+                noRange: true,
+                useVar: true,
+            },
+            states: true,
+            classes: true,
+            bindable: true,
+            responsive: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A CSS length value for the minimum width of the dropdown (e.g., "200px", "50%").',
+            },
+            propertyHelp: {
+                tooltip: 'Minimum width of the dropdown panel.',
+            },
+            /* wwEditor:end */
         },
         dropdownMaxHeight: {
             type: 'Length',
