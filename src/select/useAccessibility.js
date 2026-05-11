@@ -74,11 +74,14 @@ export default function useAccessibility({
     const handleKeydown = event => {
         const keyHandlers = {
             Tab: () => {
-                if (event.shiftKey && isOpen.value) {
-                    elementRef.value.tabIndex = -1;
-                    setTimeout(() => {
-                        if (elementRef.value) elementRef.value.tabIndex = 0;
-                    }, 0);
+                if (isOpen.value) {
+                    closeDropdown();
+                    if (event.shiftKey) {
+                        elementRef.value.tabIndex = -1;
+                        setTimeout(() => {
+                            if (elementRef.value) elementRef.value.tabIndex = 0;
+                        }, 0);
+                    }
                 }
             },
             ArrowDown: () => {
