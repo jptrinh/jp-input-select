@@ -189,6 +189,7 @@ export default {
             return {
                 flex: '1',
                 'min-height': '0', // Important for flex children to shrink below content size
+                padding: props.content.dropdownPadding,
             };
         });
 

@@ -260,7 +260,6 @@ export default {
                 'min-width': props.content.dropdownMinWidth,
                 'max-height': maxHeight,
                 'border-radius': props.content.dropdownBorderRadius,
-                padding: props.content.dropdownPadding,
                 'background-color': props.content.dropdownBgColor,
                 'box-shadow': props.content.dropdownShadows,
                 display: 'flex',
