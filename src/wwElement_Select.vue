@@ -21,6 +21,7 @@
             :aria-activedescendant="activeDescendant"
             :tabindex="isDisabled ? -1 : 0"
             :aria-disabled="isDisabled"
+            :aria-invalid="isInvalid || undefined"
         >
             <SelectTriger :content="content" @remove-multiselect-value="removeSpecificValue" />
         </div>
@@ -178,6 +179,7 @@ export default {
         });
         const isDisabled = computed(() => props.content.disabled || false);
         const isReadonly = computed(() => props.content.readonly || false);
+        const isInvalid = computed(() => props.content.invalid || false);
         const canUnselect = computed(() => props.content.unselectOnClick || false);
         const initialState = computed(() => props.content.initialState || 'closed');
         const closeOnClickOutside = computed(() => props.content.closeOnClickOutside || false);
@@ -836,6 +838,18 @@ export default {
             { immediate: true }
         );
 
+        watch(
+            isInvalid,
+            value => {
+                if (value) {
+                    emit('add-state', 'invalid');
+                } else {
+                    emit('remove-state', 'invalid');
+                }
+            },
+            { immediate: true }
+        );
+
         watch(isMouseDownOnOption, newVal => {
             if (newVal) hadPointerInteraction.value = true;
         });
@@ -983,6 +997,7 @@ export default {
         provide('_wwSelect:setValue', setValue);
         provide('_wwSelect:isDisabled', isDisabled);
         provide('_wwSelect:isReadonly', isReadonly);
+        provide('_wwSelect:isInvalid', isInvalid);
         provide('_wwSelect:canUnselect', canUnselect);
         provide('_wwSelect:searchState', searchState);
         provide('_wwSelect:optionProperties', optionProperties);
@@ -1089,6 +1104,7 @@ export default {
             dropdownId,
             activeDescendant,
             isDisabled,
+            isInvalid,
             selectType,
             handleKeydown,
             handlePointerDown,

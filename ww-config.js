@@ -207,6 +207,7 @@ export default {
                     'disabled',
                     'required',
                     'readonly',
+                    'invalid',
                     'limit',
                     'unselectOnClick',
                     'closeOnSelect',
@@ -235,7 +236,7 @@ export default {
         displayAllowedValues: ['block'],
         //ignoredStyleProperties: ['border','borderRadius','background','outline'],
     },
-    states: ['focus', 'focus-visible', 'readonly', 'disabled'],
+    states: ['focus', 'focus-visible', 'readonly', 'disabled', 'invalid'],
     triggerEvents: [
         {
             name: 'change',
@@ -578,6 +579,22 @@ export default {
             },
             propertyHelp: {
                 tooltip: 'Make the select read-only, showing the value but preventing changes.',
+            },
+            /* wwEditor:end */
+            section: 'settings',
+        },
+        invalid: {
+            label: { en: 'Invalid' },
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'boolean',
+                tooltip: 'A boolean value: \n\n`true` or `false`',
+            },
+            propertyHelp: {
+                tooltip: 'Mark the select as invalid, adding aria-invalid and an "invalid" CSS state for styling.',
             },
             /* wwEditor:end */
             section: 'settings',
